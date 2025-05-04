@@ -1,0 +1,614 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JML Studio - Retro PSX Horror</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" href="https://i.postimg.cc/0b6ppScJ/JML-Logo-01.png" type="image/png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        body {
+            margin: 0;
+            background: #0a0a0a;
+            color: #33ff33;
+            font-family: 'VT323', monospace;
+            image-rendering: pixelated;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .crt {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(rgba(18, 16, 16, 0.4), rgba(0, 0, 0, 0.75));
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.5;
+            animation: vignettePulse 7s ease-in-out infinite;
+        }
+        .crt::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) 2px, transparent 2px, transparent 10px);
+            mix-blend-mode: overlay;
+            animation: scanline 4s linear infinite;
+        }
+        header, main, footer {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 70px;
+            background: linear-gradient(180deg, rgba(0, 35, 0, 0.94), rgba(0, 25, 0, 0.92));
+            border: 9px solid #33ff33;
+            box-shadow: 0 0 70px #33ff33, inset 0 0 35px #33ff33;
+            border-radius: 18px;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 350px;
+            filter: drop-shadow(0 0 35px #33ff33) brightness(1.5);
+            animation: consoleBoot 2.5s ease-out, neonPulse 2s infinite;
+            border-radius: 14px;
+        }
+        h1 {
+            font-size: 6em;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            text-shadow: 0 0 40px #33ff33, 0 0 50px #ff00cc, 0 0 3px #fff;
+            animation: glitch 1.5s infinite;
+        }
+        h2 {
+            font-size: 3.5em;
+            text-transform: uppercase;
+            letter-spacing: 7px;
+            text-shadow: 0 0 30px #33ff33, 0 0 20px #ff00cc, 0 0 3px #fff;
+            margin-bottom: 40px;
+        }
+        p {
+            font-size: 1.8em;
+            line-height: 2.1;
+            text-shadow: 0 0 3px #fff;
+        }
+        .link-button, .play-button, .submit-button {
+            display: inline-block;
+            padding: 18px 36px;
+            margin: 12px;
+            border: 5px solid #33ff33;
+            background: linear-gradient(45deg, rgba(51, 255, 51, 0.35), rgba(0, 60, 0, 0.35));
+            color: #33ff33;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 25px #33ff33;
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+        }
+        .link-button:hover, .play-button:hover, .submit-button:hover {
+            background: linear-gradient(45deg, #00cccc, #00b7eb);
+            color: #000;
+            box-shadow: 0 0 50px #00cccc;
+            transform: scale(1.1);
+        }
+        .link-button:active, .play-button:active, .submit-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 15px #00cccc;
+        }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 60px;
+            margin: 80px 0;
+        }
+        .game-card {
+            position: relative;
+            border: 7px solid #33ff33;
+            padding: 45px;
+            background: linear-gradient(135deg, rgba(0, 35, 0, 0.94), rgba(10, 10, 10, 0.92));
+            box-shadow: 0 0 50px #33ff33;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border-radius: 18px;
+            overflow: hidden;
+        }
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 70px #ff00cc, inset 0 0 20px #00cccc;
+        }
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 204, 204, 0.5), transparent);
+            transition: 0.7s;
+        }
+        .game-card:hover::before {
+            left: 100%;
+        }
+        .game-title {
+            font-size: 3em;
+            text-transform: uppercase;
+            text-shadow: 0 0 30px #33ff33, 0 0 20px #ff00cc, 0 0 3px #fff;
+        }
+        .game-description {
+            color: #e0e0e0;
+            margin: 35px 0;
+            font-size: 1.6em;
+            text-shadow: 0 0 3px #fff;
+        }
+        .updates-list {
+            list-style: none;
+            padding: 0;
+            margin: 35px 0;
+        }
+        .updates-list li {
+            font-size: 1.7em;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 40px;
+            text-shadow: 0 0 3px #fff;
+        }
+        .updates-list li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #ff00cc;
+        }
+        .version-info {
+            font-size: 1.7em;
+            color: #ff00cc;
+            margin-top: 35px;
+            text-shadow: 0 0 20px #ff00cc, 0 0 3px #fff;
+        }
+        .team-section {
+            margin: 80px 0;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 35px;
+            margin-top: 35px;
+        }
+        .team-card {
+            border: 6px solid #33ff33;
+            padding: 35px;
+            background: linear-gradient(135deg, rgba(0, 35, 0, 0.94), rgba(10, 10, 10, 0.92));
+            box-shadow: 0 0 35px #33ff33;
+            border-radius: 14px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+        .team-card:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 50px #ff00cc;
+        }
+        .team-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 204, 204, 0.15), transparent);
+            transition: opacity 0.3s;
+            opacity: 0;
+        }
+        .team-card:hover::after {
+            opacity: 1;
+        }
+        .behind-section {
+            margin: 80px 0;
+            border: 4px solid #33ff33;
+            padding: 40px;
+            background: rgba(10, 0, 10, 0.94);
+            box-shadow: 0 0 40px #33ff33;
+            border-radius: 14px;
+        }
+        .typewriter {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 4px solid #33ff33;
+            animation: typing 3s steps(40, end) infinite, blink-caret 0.7s step-end infinite;
+        }
+        .verified {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+        .verified svg {
+            width: 40px;
+            height: 40px;
+            margin-left: 14px;
+            filter: drop-shadow(0 0 20px #1DA1F2);
+            animation: checkPulse 1.5s infinite;
+            transition: transform 0.3s ease-in-out;
+        }
+        .verified:hover svg {
+            transform: scale(1.1);
+        }
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 4px solid #33ff33;
+            background: rgba(0, 0, 0, 0.7);
+            color: #33ff33;
+            font-family: 'VT323', monospace;
+            font-size: 1.6em;
+            border-radius: 8px;
+            box-shadow: 0 0 20px #33ff33;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+        }
+        .input-field:focus {
+            border-color: #ff00cc;
+            box-shadow: 0 0 30px #ff00cc;
+        }
+        .comment-card {
+            border: 5px solid #33ff33;
+            padding: 25px;
+            margin: 20px 0;
+            background: linear-gradient(135deg, rgba(0, 35, 0, 0.94), rgba(10, 10, 10, 0.92));
+            box-shadow: 0 0 30px #33ff33;
+            border-radius: 12px;
+        }
+        .comment-author {
+            font-size: 1.8em;
+            color: #ff00cc;
+            text-shadow: 0 0 15px #ff00cc;
+        }
+        .comment-text {
+            font-size: 1.6em;
+            color: #e0e0e0;
+            margin-top: 10px;
+            text-shadow: 0 0 3px #fff;
+        }
+        .error-message {
+            color: #ff0000;
+            font-size: 1.6em;
+            text-shadow: 0 0 10px #ff0000;
+            margin: 10px 0;
+        }
+        .success-message {
+            color: #33ff33;
+            font-size: 1.6em;
+            text-shadow: 0 0 10px #33ff33;
+            margin: 10px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 90px;
+            border-top: 7px solid #33ff33;
+            padding-top: 45px;
+        }
+        .social-link {
+            margin: 0 35px;
+            font-size: 1.7em;
+        }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            10% { transform: translate(-6px, 6px); }
+            20% { transform: translate(6px, -6px); }
+            30% { transform: translate(0); }
+            100% { transform: translate(0); }
+        }
+        @keyframes vignettePulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 0.45; }
+            100% { opacity: 0.5; }
+        }
+        @keyframes scanline {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 140px; }
+        }
+        @keyframes consoleBoot {
+            0% { opacity: 0; transform: scale(0.2); filter: blur(8px); }
+            50% { opacity: 0.6; transform: scale(1.1); filter: blur(4px); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+        @keyframes neonPulse {
+            0% { filter: drop-shadow(0 0 35px #33ff33); }
+            50% { filter: drop-shadow(0 0 45px #33ff33); }
+            100% { filter: drop-shadow(0 0 35px #33ff33); }
+        }
+        @keyframes checkPulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 20px #1DA1F2); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 25px #1DA1F2); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 20px #1DA1F2); }
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #33ff33; }
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 4.5em; }
+            h2 { font-size: 2.8em; }
+            p { font-size: 1.6em; }
+            header, main, footer { padding: 50px; }
+            .game-card { padding: 35px; }
+            .logo { max-width: 250px; }
+            .game-grid { grid-template-columns: 1fr; }
+            .team-grid { grid-template-columns: 1fr; }
+            .behind-section { padding: 30px; }
+            .verified svg { width: 36px; height: 36px; }
+            .link-button, .play-button, .submit-button { padding: 16px 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="crt"></div>
+    <header>
+        <img src="https://i.postimg.cc/0b6ppScJ/JML-Logo-01.png" alt="JML Studio Logo" class="logo">
+        <h1>JML Studio</h1>
+        <p class="text-center text-4xl mt-4">Retro PSX Horror That Haunts Your Dreams</p>
+    </header>
+    <main>
+        <section class="mb-28">
+            <h2>Our Mission</h2>
+            <p class="mt-4">
+                JML Studio is your portal to the chilling abyss of retro PSX horror. We craft low-poly nightmares with haunting soundscapes and stories that cling to your soul. 
+                Inspired by the raw terror of '90s survival horror, we blend nostalgic dread with cutting-edge twists. Dare to venture into the darkness?
+            </p>
+        </section>
+        <section class="mb-28">
+            <h2>Register</h2>
+            <p class="mt-4">Join the JML Studio community to leave comments and share your horror experiences!</p>
+            <div class="game-card">
+                <input type="text" id="reg-name" class="input-field" placeholder="Enter your name" required>
+                <input type="password" id="reg-password" class="input-field" placeholder="Enter your password" required>
+                <button class="submit-button" onclick="registerUser()">Register</button>
+                <p id="reg-error" class="error-message"></p>
+                <p id="reg-success" class="success-message"></p>
+            </div>
+        </section>
+        <section class="mb-28">
+            <h2>Our Games</h2>
+            <p class="mt-4">Dive into our sinister creations on <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="link-button" onclick="console.log('Itch.io community clicked')">Itch.io</a>. 
+               From cursed burger joints to haunted trailer parks, our games deliver heart-pounding retro horror.</p>
+            <div class="game-grid">
+                <div class="game-card">
+                    <h3 class="game-title">Burger Shop</h3>
+                    <p class="game-description">Welcome to the Burger Shop, where the fries are fresh, but the shadows serve something sinister. 
+                       Can you survive the night shift?</p>
+                    <a href="https://agamedeveloperstudio.itch.io/whispers-in-the-dark-burger-shop" target="_blank" rel="noopener noreferrer" class="play-button" onclick="console.log('Burger Shop Play Now clicked')">Play Now</a>
+                </div>
+                <div class="game-card">
+                    <h3 class="game-title">Trailer Park</h3>
+                    <p class="game-description">Welcome to the Trailer Park, where silence deafens and darkness hides unspeakable horrors. 
+                       What lurks beyond the flickering lights?</p>
+                    <a href="https://agamedeveloperstudio.itch.io/trailer-park" target="_blank" rel="noopener noreferrer" class="play-button" onclick="console.log('Trailer Park Play Now clicked')">Play Now</a>
+                </div>
+            </div>
+        </section>
+        <section class="mb-28">
+            <h2>Latest Updates</h2>
+            <p class="mt-4">Stay in the loop with our latest developments!</p>
+            <ul class="updates-list">
+                <li><strong>April 30, 2025:</strong> Major update. <em>(Version 2.0.1.5)</em></li>
+                <li><strong>April 29, 2025:</strong> Major update. <em>(Version 1.9.9)</em></li>
+                <li><strong>April 28, 2025:</strong> Website has been released. <em>(Version 1.2.2)</em></li>
+                <li><strong>April 15, 2025:</strong> Start to development website. <em>(Version 1.2.1)</em></li>
+            </ul>
+            <p class="version-info">Current Version: 2.0.1.5 (Updated April 30, 2025)</p>
+        </section>
+        <section class="mb-28">
+            <h2>Community Comments</h2>
+            <p class="mt-4">Share your thoughts and join the horror community! Register to leave a comment.</p>
+            <div class="game-card">
+                <input type="text" id="comment-name" class="input-field" placeholder="Your registered name" required>
+                <input type="password" id="comment-password" class="input-field" placeholder="Your password" required>
+                <textarea id="comment-text" class="input-field" placeholder="Your comment" rows="4" required></textarea>
+                <button class="submit-button" onclick="postComment()">Post Comment</button>
+                <p id="comment-error" class="error-message"></p>
+                <p id="comment-success" class="success-message"></p>
+            </div>
+            <div id="comments-list"></div>
+        </section>
+        <section class="behind-section mb-28">
+            <h2>Behind the Screams</h2>
+            <p class="mt-4 typewriter">Crafting retro horror is our passion. We pour our souls into every pixel and sound to recreate that '90s terror. From sketching low-poly models to composing eerie tracks, every step is a love letter to horror.</p>
+        </section>
+        <section class="team-section mb-28">
+            <h2>Meet the Team</h2>
+            <p class="mt-4">The twisted minds behind JML Studio's retro horror masterpieces.</p>
+            <div class="team-grid">
+                <div class="team-card">
+                    <h3 class="game-title verified">
+                        JML Developer
+                        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="20" cy="20" r="20" fill="#1DA1F2"/>
+                            <path d="M14 24L18 28L26 16" stroke="#fff" stroke-width="4" fill="none"/>
+                        </svg>
+                    </h3>
+                    <p class="game-description">Lead Developer & Horror Visionary</p>
+                </div>
+                <div class="team-card">
+                    <h3 class="game-title">Midev</h3>
+                    <p class="game-description">Art Director & PSX Aesthete</p>
+                </div>
+                <div class="team-card">
+                    <h3 class="game-title">Kip</h3>
+                    <p class="game-description">Sound Designer & Fear Composer</p>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2>Join the Nightmare</h2>
+            <p class="mt-4">Got a twisted idea or just wanna talk horror? Join our 
+               <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="link-button" onclick="console.log('Itch.io community clicked')">Itch.io community</a> or chat with us on 
+               <a href="https://discord.gg/quQzQAa2nP" target="_blank" rel="noopener noreferrer" class="link-button" onclick="console.log('Discord clicked')">Discord</a>. 
+               Stay tuned for new releases and creepy updates!</p>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 JML Studio. All rights reserved.</p>
+        <p class="mt-4">
+            <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="social-link link-button" onclick="console.log('Footer Itch.io clicked')">Itch.io</a>
+            <a href="https://discord.gg/quQzQAa2nP" target="_blank" rel="noopener noreferrer" class="social-link link-button" onclick="console.log('Footer Discord clicked')">Discord</a>
+        </p>
+    </footer>
+    <script>
+        // Generate UUID for user IDs
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Register a new user
+        function registerUser() {
+            const name = document.getElementById('reg-name').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const error = document.getElementById('reg-error');
+            const success = document.getElementById('reg-success');
+
+            error.textContent = '';
+            success.textContent = '';
+
+            if (!name || !password) {
+                error.textContent = 'Name and password are required!';
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.some(user => user.name === name)) {
+                error.textContent = 'Name already taken!';
+                return;
+            }
+
+            const user = {
+                id: generateUUID(),
+                name: name,
+                password: password // Note: In production, hash the password
+            };
+
+            users.push(user);
+            localStorage.setItem('users', JSON.stringify(users));
+            success.textContent = 'Registration successful! You can now post comments.';
+            document.getElementById('reg-name').value = '';
+            document.getElementById('reg-password').value = '';
+        }
+
+        // Post a comment
+        function postComment() {
+            const name = document.getElementById('comment-name').value.trim();
+            const password = document.getElementById('comment-password').value;
+            const text = document.getElementById('comment-text').value.trim();
+            const error = document.getElementById('comment-error');
+            const success = document.getElementById('comment-success');
+
+            error.textContent = '';
+            success.textContent = '';
+
+            if (!name || !password || !text) {
+                error.textContent = 'All fields are required!';
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.name === name && u.password === password);
+
+            if (!user) {
+                error.textContent = 'Invalid name or password!';
+                return;
+            }
+
+            let comments = JSON.parse(localStorage.getItem('comments')) || [];
+            comments.push({
+                userId: user.id,
+                name: user.name,
+                text: text,
+                timestamp: new Date().toISOString()
+            });
+
+            localStorage.setItem('comments', JSON.stringify(comments));
+            success.textContent = 'Comment posted successfully!';
+            document.getElementById('comment-name').value = '';
+            document.getElementById('comment-password').value = '';
+            document.getElementById('comment-text').value = '';
+            displayComments();
+        }
+
+        // Display comments
+        function displayComments() {
+            const commentsList = document.getElementById('comments-list');
+            const comments = JSON.parse(localStorage.getItem('comments')) || [];
+
+            commentsList.innerHTML = '';
+            comments.forEach(comment => {
+                const commentCard = document.createElement('div');
+                commentCard.className = 'comment-card';
+                commentCard.innerHTML = `
+                    <p class="comment-author">${comment.name}</p>
+                    <p class="comment-text">${comment.text}</p>
+                    <p class="comment-text" style="font-size: 1.4em; color: #999;">Posted on ${new Date(comment.timestamp).toLocaleString()}</p>
+                `;
+                commentsList.appendChild(commentCard);
+            });
+        }
+
+        // Load comments on page load
+        window.onload = displayComments;
+    </script>
+</body>
+</html>
