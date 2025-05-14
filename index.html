@@ -3,611 +3,421 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="JML Studio - Retro PSX horror games that trap you in cyan-lit nightmares with chilling soundscapes.">
-    <meta name="keywords" content="JML Studio, retro horror, PSX games, indie horror, survival horror, cyan aesthetic">
+    <meta name="description" content="JML Studio - Retro PSX horror games that draw you into misty, cerulean nightmares with haunting pixelated dread.">
+    <meta name="keywords" content="JML Studio, retro horror, PSX games, indie horror, survival horror, pixel art">
     <meta name="author" content="JML Studio">
-    <title>JML Studio - Retro game studio</title>
+    <title>JML Studio - Cerulean Nightmares</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" integrity="sha384-4g6zW6f5zW7zX6zW5zX6zW5zX6zW5zX6zW5zX6zW5zX6zW5zX6zW5zX6zW5zX6z" crossorigin="anonymous">
     <link rel="icon" href="https://i.postimg.cc/0b6ppScJ/JML-Logo-01.png" type="image/png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&family=Pixel+Operator:wght@400;700&display=swap">
     <style>
         :root {
-            --neon-cyan: #00ccff;
-            --neon-blue: #1a3c6e;
-            --dark-bg: #0d1b2a;
-            --card-bg: linear-gradient(135deg, rgba(10, 30, 50, 0.95), rgba(20, 40, 70, 0.93));
-            --shadow-glow: 0 0 70px var(--neon-cyan), inset 0 0 25px var(--neon-cyan);
-            --transition: all 0.4s ease-in-out;
+            --deep-navy: #0a1c2b;
+            --soft-cerulean: #4a90e2;
+            --pale-silver: #d9e4ec;
+            --misty-glow: rgba(74, 144, 226, 0.3);
+            --transition: all 0.3s ease;
         }
 
         body {
             margin: 0;
-            background: var(--dark-bg);
-            color: var(--neon-cyan);
-            font-family: 'VT323', monospace;
+            background: var(--deep-navy);
+            color: var(--pale-silver);
+            font-family: 'Pixel Operator', monospace;
             image-rendering: pixelated;
             overflow-x: hidden;
             position: relative;
-            transition: var(--transition);
         }
 
-        body.light-mode {
-            background: #e0e6f0;
-            color: #1a3c6e;
-        }
-
-        .crt {
+        .crt-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(rgba(10, 20, 40, 0.6), rgba(0, 0, 20, 0.85));
+            background: linear-gradient(rgba(10, 28, 43, 0.7), rgba(0, 10, 20, 0.8));
             pointer-events: none;
             z-index: 1000;
-            opacity: 0.7;
-            animation: vignettePulse 5.5s ease-in-out infinite;
+            opacity: 0.5;
+            animation: crtFlicker 5s ease-in-out infinite;
         }
 
-        .crt::after {
+        .crt-overlay::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(0, 0, 20, 0.6), rgba(0, 0, 20, 0.6) 2px, transparent 2px, transparent 7px);
+            background: repeating-linear-gradient(0deg, rgba(0, 0, 20, 0.3), rgba(0, 0, 20, 0.3) 1px, transparent 1px, transparent 3px);
             mix-blend-mode: overlay;
             animation: scanline 3s linear infinite;
         }
 
-        .stars {
+        .mist-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="%2300ccff" opacity="0.4"/></svg>') repeat;
-            animation: starDrift 30s linear infinite;
-            pointer-events: none;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.15), rgba(10, 28, 43, 0.8));
             z-index: 1;
+            animation: mistFlow 50s linear infinite;
+            opacity: 0.6;
+        }
+
+        .particle-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="%234a90e2" opacity="0.2"/></svg>') repeat;
+            z-index: 2;
+            animation: particleDrift 70s linear infinite;
+            opacity: 0.3;
         }
 
         header, main, footer {
-            max-width: 1500px;
-            margin: 0 auto;
-            padding: 70px;
-            background: var(--card-bg);
-            border: 12px solid var(--neon-cyan);
-            box-shadow: var(--shadow-glow);
-            border-radius: 22px;
+            max-width: 1350px;
+            margin: 40px auto;
+            padding: 50px;
+            background: linear-gradient(145deg, rgba(10, 28, 43, 0.95), rgba(0, 10, 20, 0.9));
+            border: 3px solid var(--soft-cerulean);
+            border-radius: 20px;
+            box-shadow: 0 0 20px var(--misty-glow);
             position: relative;
-            z-index: 2;
-            animation: neonBorder 2s infinite;
+            z-index: 3;
+            animation: glowBorder 4s ease-in-out infinite;
         }
 
         .logo {
             display: block;
             margin: 0 auto;
             width: 100%;
-            max-width: 350px;
-            filter: drop-shadow(0 0 35px var(--neon-cyan)) brightness(1.7);
-            animation: consoleBoot 2s ease-out, neonPulse 1.6s infinite;
-            border-radius: 18px;
+            max-width: 340px;
+            filter: drop-shadow(0 0 15px var(--soft-cerulean));
+            animation: fadeIn 3s ease-out;
+            border-radius: 12px;
             loading: lazy;
         }
 
         h1 {
-            font-size: 6em;
+            font-family: 'VT323', monospace;
+            font-size: 4em;
             text-align: center;
             text-transform: uppercase;
-            letter-spacing: 10px;
-            text-shadow: 0 0 40px var(--neon-cyan), 0 0 50px var(--neon-blue);
-            animation: glitch 1.3s infinite;
+            letter-spacing: 7px;
+            color: var(--soft-cerulean);
+            text-shadow: 0 0 10px var(--misty-glow);
+            animation: softGlow 3s ease-in-out infinite;
+            margin-bottom: 20px;
         }
 
         h2 {
-            font-size: 3.5em;
+            font-family: 'VT323', monospace;
+            font-size: 2.6em;
             text-transform: uppercase;
-            letter-spacing: 8px;
-            text-shadow: 0 0 35px var(--neon-cyan), 0 0 25px var(--neon-blue);
-            margin-bottom: 40px;
+            letter-spacing: 5px;
+            color: var(--soft-cerulean);
+            text-shadow: 0 0 8px var(--misty-glow);
+            margin-bottom: 25px;
         }
 
         p {
-            font-size: 1.8em;
+            font-size: 1.5em;
             line-height: 2;
-            text-shadow: 0 0 4px #e0f0ff;
+            color: var(--pale-silver);
+            text-shadow: 0 0 3px var(--misty-glow);
         }
 
-        .link-button, .play-button, .submit-button, .theme-toggle, .audio-toggle {
+        .link-button, .play-button {
             display: inline-block;
-            padding: 18px 36px;
-            margin: 15px;
-            border: 6px solid var(--neon-cyan);
-            background: linear-gradient(45deg, rgba(0, 204, 255, 0.4), rgba(10, 30, 50, 0.4));
-            color: var(--neon-cyan);
+            padding: 15px 30px;
+            margin: 12px;
+            border: 2px solid var(--soft-cerulean);
+            background: rgba(10, 28, 43, 0.8);
+            color: var(--soft-cerulean);
+            font-family: 'VT323', monospace;
+            font-size: 1.2em;
             text-transform: uppercase;
             text-decoration: none;
             transition: var(--transition);
-            box-shadow: 0 0 30px var(--neon-cyan);
-            border-radius: 14px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px var(--misty-glow);
             cursor: pointer;
             position: relative;
-            z-index: 10;
             overflow: hidden;
         }
 
-        .link-button::before, .play-button::before, .submit-button::before, .theme-toggle::before, .audio-toggle::before {
+        .link-button::before, .play-button::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 204, 255, 0.7), transparent);
-            transition: 0.6s;
+            background: linear-gradient(90deg, transparent, var(--soft-cerulean), transparent);
+            transition: 0.5s;
         }
 
-        .link-button:hover::before, .play-button:hover::before, .submit-button:hover::before, .theme-toggle:hover::before, .audio-toggle:hover::before {
+        .link-button:hover::before, .play-button:hover::before {
             left: 100%;
         }
 
-        .link-button:hover, .play-button:hover, .submit-button:hover, .theme-toggle:hover, .audio-toggle:hover {
-            background: linear-gradient(45deg, #00b7eb, #0077cc);
-            color: #fff;
-            box-shadow: 0 0 60px var(--neon-cyan);
-            transform: translateY(-4px) scale(1.05);
+        .link-button:hover, .play-button:hover {
+            background: var(--soft-cerulean);
+            color: var(--deep-navy);
+            box-shadow: 0 0 25px var(--soft-cerulean);
+            transform: scale(1.05);
         }
 
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
-            gap: 60px;
-            margin: 80px 0;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin: 50px 0;
         }
 
         .game-card {
-            position: relative;
-            border: 8px solid var(--neon-cyan);
-            padding: 45px;
-            background: var(--card-bg);
-            box-shadow: var(--shadow-glow);
-            transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
-            border-radius: 18px;
-            overflow: hidden;
-            transform: perspective(1200px) rotateX(0deg) rotateY(0deg);
+            border: 2px solid var(--soft-cerulean);
+            padding: 30px;
+            background: rgba(10, 28, 43, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 0 15px var(--misty-glow);
+            transition: var(--transition);
+            animation: cardFade 1.5s ease-out;
         }
 
         .game-card:hover {
-            transform: perspective(1200px) rotateX(3deg) rotateY(3deg);
-            box-shadow: 0 0 80px var(--neon-blue), inset 0 0 30px var(--neon-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px var(--soft-cerulean);
         }
 
         .game-title {
-            font-size: 3em;
+            font-family: 'VT323', monospace;
+            font-size: 2em;
             text-transform: uppercase;
-            text-shadow: 0 0 35px var(--neon-cyan), 0 0 25px var(--neon-blue);
+            color: var(--soft-cerulean);
+            text-shadow: 0 0 6px var(--misty-glow);
         }
 
         .game-description {
-            color: #d0e0ff;
-            margin: 35px 0;
-            font-size: 1.7em;
-            text-shadow: 0 0 4px #e0f0ff;
+            color: var(--pale-silver);
+            margin: 20px 0;
+            font-size: 1.4em;
         }
 
-        .input-field {
-            width: 100%;
-            padding: 16px;
-            margin: 15px 0;
-            border: 5px solid var(--neon-cyan);
-            background: rgba(0, 10, 30, 0.8);
-            color: var(--neon-cyan);
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 28, 43, 0.95);
+            padding: 20px 0;
+            z-index: 4;
+            text-align: center;
+            border-bottom: 2px solid var(--soft-cerulean);
+        }
+
+        nav a {
+            margin: 0 30px;
             font-family: 'VT323', monospace;
-            font-size: 1.7em;
+            font-size: 1.3em;
+            text-transform: uppercase;
+            color: var(--soft-cerulean);
+            text-decoration: none;
+            transition: var(--transition);
+            text-shadow: 0 0 4px var(--misty-glow);
+        }
+
+        nav a:hover {
+            color: var(--deep-navy);
+            background: var(--soft-cerulean);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .analytics-hud {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 10, 20, 0.9);
+            border: 2px solid var(--soft-cerulean);
             border-radius: 12px;
-            box-shadow: 0 0 25px var(--neon-cyan);
-            outline: none;
-            transition: var(--transition);
+            text-align: center;
+            font-family: 'VT323', monospace;
+            font-size: 1.1em;
+            color: var(--pale-silver);
+            text-shadow: 0 0 4px var(--misty-glow);
+            box-shadow: 0 0 15px var(--misty-glow);
         }
 
-        .input-field:focus {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 35px var(--neon-blue);
+        .analytics-hud span {
+            color: var(--soft-cerulean);
+            animation: counterGlow 2s ease-in-out infinite;
         }
 
-        .comment-card {
-            border: 6px solid var(--neon-cyan);
-            padding: 30px;
-            margin: 25px 0;
-            background: var(--card-bg);
-            box-shadow: 0 0 35px var(--neon-cyan);
-            border-radius: 14px;
-        }
-
-        .error-message {
-            color: #ff3333;
-            font-size: 1.7em;
-            text-shadow: 0 0 12px #ff3333;
-            margin: 12px 0;
-        }
-
-        .success-message {
-            color: var(--neon-cyan);
-            font-size: 1.7em;
-            text-shadow: 0 0 12px var(--neon-cyan);
-            margin: 12px 0;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin: 30px 0;
-        }
-
-        .pagination button {
-            margin: 0 8px;
-            padding: 14px 20px;
-            border: 4px solid var(--neon-cyan);
-            background: rgba(0, 10, 30, 0.8);
-            color: var(--neon-cyan);
-            cursor: pointer;
-            transition: var(--transition);
-            border-radius: 10px;
-        }
-
-        .pagination button:hover {
-            background: var(--neon-cyan);
-            color: #000;
-        }
-
-        .pagination button.active {
-            background: var(--neon-cyan);
-            color: #000;
-        }
-
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
-            filter: blur(3px);
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            12% { transform: translate(-6px, 6px); }
-            24% { transform: translate(6px, -6px); }
-            36% { transform: translate(0); }
-            100% { transform: translate(0); }
-        }
-
-        @keyframes vignettePulse {
-            0% { opacity: 0.7; }
-            50% { opacity: 0.6; }
-            100% { opacity: 0.7; }
+        @keyframes crtFlicker {
+            0% { opacity: 0.5; }
+            50% { opacity: 0.4; }
+            100% { opacity: 0.5; }
         }
 
         @keyframes scanline {
             0% { background-position: 0 0; }
-            100% { background-position: 0 80px; }
+            100% { background-position: 0 60px; }
         }
 
-        @keyframes consoleBoot {
-            0% { opacity: 0; transform: scale(0.5); filter: blur(8px); }
-            50% { opacity: 0.9; transform: scale(1.15); filter: blur(4px); }
-            100% { opacity: 1; transform: scale(1); filter: blur(0); }
-        }
-
-        @keyframes neonPulse {
-            0% { filter: drop-shadow(0 0 35px var(--neon-cyan)); }
-            50% { filter: drop-shadow(0 0 45px var(--neon-cyan)); }
-            100% { filter: drop-shadow(0 0 35px var(--neon-cyan)); }
-        }
-
-        @keyframes starDrift {
+        @keyframes mistFlow {
             0% { background-position: 0 0; }
-            100% { background-position: 120px 120px; }
+            100% { background-position: 150px 150px; }
         }
 
-        @keyframes neonBorder {
-            0% { border-color: var(--neon-cyan); }
-            50% { border-color: #00b7eb; }
-            100% { border-color: var(--neon-cyan); }
+        @keyframes particleDrift {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes softGlow {
+            0% { text-shadow: 0 0 10px var(--misty-glow); }
+            50% { text-shadow: 0 0 15px var(--misty-glow); }
+            100% { text-shadow: 0 0 10px var(--misty-glow); }
+        }
+
+        @keyframes glowBorder {
+            0% { border-color: var(--soft-cerulean); }
+            50% { border-color: #3a80d2; }
+            100% { border-color: var(--soft-cerulean); }
+        }
+
+        @keyframes cardFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes counterGlow {
+            0% { text-shadow: 0 0 6px var(--soft-cerulean); }
+            50% { text-shadow: 0 0 10px var(--soft-cerulean); }
+            100% { text-shadow: 0 0 6px var(--soft-cerulean); }
         }
 
         @media (max-width: 600px) {
-            h1 { font-size: 4.5em; }
-            h2 { font-size: 2.8em; }
-            p { font-size: 1.6em; }
-            header, main, footer { padding: 50px; }
-            .game-card { padding: 35px; }
-            .logo { max-width: 280px; }
+            h1 { font-size: 2.8em; }
+            h2 { font-size: 2em; }
+            p { font-size: 1.2em; }
+            header, main, footer { padding: 25px; margin: 20px; }
+            .game-card { padding: 20px; }
+            .logo { max-width: 260px; }
             .game-grid { grid-template-columns: 1fr; }
-            .input-field { font-size: 1.5em; }
-            .link-button, .play-button, .submit-button, .theme-toggle, .audio-toggle { padding: 16px 32px; }
+            nav a { display: block; margin: 10px 0; font-size: 1.1em; }
+            .analytics-hud { font-size: 0.9em; }
+            .link-button, .play-button { padding: 12px 24px; font-size: 1.1em; }
         }
     </style>
 </head>
-<body class="dark-mode">
-    <div class="crt"></div>
-    <div class="stars"></div>
+<body>
+    <div class="crt-overlay"></div>
+    <div class="mist-bg"></div>
+    <div class="particle-layer"></div>
+    <nav>
+        <a href="#mission">Our Terror</a>
+        <a href="#games">Realms</a>
+        <a href="#updates">Patches</a>
+    </nav>
     <header role="banner">
-        <div class="flex justify-between">
-            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">Toggle Theme</button>
-            <button class="audio-toggle" onclick="toggleAudio()" aria-label="Toggle audio">Toggle Audio</button>
-        </div>
         <img src="https://i.postimg.cc/0b6ppScJ/JML-Logo-01.png" alt="JML Studio Logo" class="logo" loading="lazy">
         <h1>JML Studio</h1>
-        <p class="text-center text-4xl mt-4">Cyan-Lit Nightmares That Devour Your Mind</p>
+        <p class="text-center text-2xl mt-4">Cerulean Nightmares in Pixelated Dread</p>
     </header>
     <main role="main">
-        <section class="mb-28" aria-labelledby="mission">
-            <h2 id="mission">Our Dark Pact</h2>
-            <p class="mt-4">
-                JML Studio lures you into a void of retro PSX horror, where cyan shadows pulse with dread. Our low-poly realms, drenched in haunting soundscapes, weave stories that claw at your psyche. 
-                Inspired by '90s terror, we fuse nostalgia with relentless fear. Dare to cross the threshold?
+        <section class="mb-20" id="mission" aria-labelledby="mission">
+            <h2>Our Terror</h2>
+            <p>
+                JML Studio crafts retro PSX horrors that pull you into misty, cerulean nightmares. Our low-poly realms, shimmering with eerie CRT glow, unravel your sense of reality. 
+                Inspired by '90s survival horror, we conjure terrors that linger like static on an old screen. Will you face the mist?
             </p>
         </section>
-        <section class="mb-28" aria-labelledby="register">
-            <h2 id="register">Pledge Your Soul</h2>
-            <p class="mt-4">Join our forsaken community to share your screams and etch your mark in the abyss!</p>
-            <div class="game-card">
-                <input type="text" id="reg-name" class="input-field" placeholder="Your name in the void" aria-label="Name" required>
-                <input type="password" id="reg-password" class="input-field" placeholder="Your cursed passphrase" aria-label="Password" required>
-                <button class="submit-button" onclick="registerUser()" aria-label="Register">Seal Your Fate</button>
-                <p id="reg-error" class="error-message" role="alert"></p>
-                <p id="reg-success" class="success-message" role="status"></p>
-            </div>
-        </section>
-        <section class="mb-28" aria-labelledby="games">
-            <h2 id="games">Our Forbidden Realms</h2>
-            <p class="mt-4">
-                Descend into our cursed creations on <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="link-button" onclick="logEvent('Itch.io community clicked')">Itch.io</a>. 
-                From haunted diners to desolate wastelands, our games unleash unrelenting terror.
+        <section class="mb-20" id="games" aria-labelledby="games">
+            <h2>Misty Realms</h2>
+            <p>
+                Plunge into our cursed creations on <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="link-button" onclick="logEvent('Itch.io community clicked')">Itch.io</a>. 
+                From fog-shrouded diners to desolate voids, our games summon haunting dread.
             </p>
             <div class="game-grid">
                 <div class="game-card">
                     <h3 class="game-title">Burger Shop</h3>
                     <p class="game-description">
-                        The Burger Shop tempts with fresh fries but serves raw terror. Survive a night where shadows feast on your fear.
+                        The Burger Shop hums with ghostly light, its polygons fading into misty shadows. Survive its pixelated dread.
                     </p>
-                    <a href="https://agamedeveloperstudio.itch.io/whispers-in-the-dark-burger-shop" target="_blank" rel="noopener noreferrer" class="play-button" onclick="logEvent('Burger Shop Play Now clicked')">Embrace the Fear</a>
+                    <a href="https://agamedeveloperstudio.itch.io/whispers-in-the-dark-burger-shop" target="_blank" rel="noopener noreferrer" class="play-button" onclick="logEvent('Burger Shop Play Now clicked')">Enter the Mist</a>
                 </div>
                 <div class="game-card">
                     <h3 class="game-title">Trailer Park</h3>
                     <p class="game-description">
-                        The Trailer Park hums with silence, hiding horrors in its flickering glow. Can you outrun the darkness?
+                        The Trailer Park lies cloaked in fog, its silence hiding horrors in cerulean decay. Can you escape the static?
                     </p>
                     <a href="https://agamedeveloperstudio.itch.io/trailer-park" target="_blank" rel="noopener noreferrer" class="play-button" onclick="logEvent('Trailer Park Play Now clicked')">Defy the Void</a>
                 </div>
             </div>
         </section>
-        <section class="mb-28" aria-labelledby="updates">
-            <h2 id="updates">Echoes of Dread</h2>
-            <p class="mt-4">Stay bound to our latest horrors!</p>
+        <section class="mb-20" id="updates" aria-labelledby="updates">
+            <h2>Patches from the Abyss</h2>
+            <p>Receive the latest signals from our misty realms.</p>
             <ul class="updates-list">
-                <li><strong>May 05, 2025:</strong> Mayor update <em>(Version 2.2.5)</em></li>
-                <li><strong>April 30, 2025:</strong> Mayor update. <em>(Version 2.0.1.5)</em></li>
-                <li><strong>April 29, 2025:</strong> Mayor update. <em>(Version 1.9.9)</em></li>
-                <li><strong>April 28, 2025:</strong> Website released. <em>(Version 1.2.2)</em></li>
-                <li><strong>April 15, 2025:</strong> Start creationg <em>(Version 1.2.1)</em></li>
+                <li><strong>May 05, 2025:</strong> Major patch <em>(Version 2.2.5)</em></li>
+                <li><strong>April 30, 2025:</strong> Major patch <em>(Version 2.0.1.5)</em></li>
+                <li><strong>April 29, 2025:</strong> Major patch <em>(Version 1.9.9)</em></li>
+                <li><strong>April 28, 2025:</strong> Realm unveiled <em>(Version 1.2.2)</em></li>
+                <li><strong>April 15, 2025:</strong> First static <em>(Version 1.2.1)</em></li>
             </ul>
-            <p class="version-info">Current Version: 2.2.5 (Unleashed April 30, 2025)</p>
-        </section>
-        <section class="mb-28" aria-labelledby="comments">
-            <h2 id="comments">Cries from the Abyss</h2>
-            <p class="mt-4">Unleash your screams and join the haunted! Register to carve your words into eternity.</p>
-            <div class="game-card">
-                <input type="text" id="comment-name" class="input-field" placeholder="Your forsaken name" aria-label="Registered name" required>
-                <input type="password" id="comment-password" class="input-field" placeholder="Your cursed passphrase" aria-label="Password" required>
-                <textarea id="comment-text" class="input-field" placeholder="Scream into the void" rows="4" aria-label="Comment" required></textarea>
-                <button class="submit-button" onclick="postComment()" aria-label="Post comment">Unleash Your Cry</button>
-                <p id="comment-error" class="error-message" role="alert"></p>
-                <p id="comment-success" class="success-message" role="status"></p>
-            </div>
-            <input type="text" id="comment-search" class="input-field" placeholder="Search the cries..." aria-label="Search comments">
-            <div id="comments-list"></div>
-            <div class="pagination" id="pagination"></div>
+            <p class="version-info">Current Patch: 2.2.5 (Deployed May 05, 2025)</p>
         </section>
     </main>
     <footer role="contentinfo">
-        <p>© 2025 JML Studio. All souls bound.</p>
+        <p>© 2025 JML Studio. All souls lost to the mist.</p>
         <p class="mt-4">
-            <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="social-link link-button" onclick="logEvent('Footer Itch.io clicked')">Itch.io</a>
-            <a href="https://discord.gg/quQzQAa2nP" target="_blank" rel="noopener noreferrer" class="social-link link-button" onclick="logEvent('Footer Discord clicked')">Discord</a>
+            <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="link-button" onclick="logEvent('Footer Itch.io clicked')">Itch.io</a>
+            <a href="https://discord.gg/quQzQAa2nP" target="_blank" rel="noopener noreferrer" class="link-button" onclick="logEvent('Footer Discord clicked')">Discord</a>
         </p>
+        <div class="analytics-hud">
+            <p>Souls Entered: <span id="total-views">0</span> | Lost Wanderers: <span id="unique-visits">0</span></p>
+        </div>
     </footer>
-    <audio id="ambiance" loop>
-        <source src="https://www.soundjay.com/ambient/sounds/ambient-horror-01.mp3" type="audio/mpeg">
-    </audio>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js" integrity="sha384-/h8vV1u2Z7v3zFzFzFzFzFzFzFzFzFzFzFzFzFzFzFzFzFzFzFzFzFzFzFzFzFzFz" crossorigin="anonymous"></script>
     <script>
-        // Utility functions
-        const Utils = {
+        // Analytics tracking
+        const Analytics = {
             generateUUID: () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
                 const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
             }),
-            sanitizeInput: input => input.replace(/[<>&"']/g, char => ({
-                '<': '<', '>': '>', '&': '&', '"': '"', "'": '''
-            })[char]),
-            hashPassword: password => CryptoJS.SHA256(password).toString()
-        };
-
-        // Local storage manager
-        const Storage = {
-            getUsers: () => JSON.parse(localStorage.getItem('users')) || [],
-            setUsers: users => localStorage.setItem('users', JSON.stringify(users)),
-            getComments: () => JSON.parse(localStorage.getItem('comments')) || [],
-            setComments: comments => localStorage.setItem('comments', JSON.stringify(comments))
-        };
-
-        // UI manager
-        const UI = {
-            setLoading: (element, state) => {
-                element.classList.toggle('loading', state);
-                element.disabled = state;
-            },
-            showError: (id, message) => {
-                const el = document.getElementById(id);
-                el.textContent = message;
-                el.setAttribute('role', 'alert');
-            },
-            showSuccess: (id, message) => {
-                const el = document.getElementById(id);
-                el.textContent = message;
-                el.setAttribute('role', 'status');
-            },
-            clearFields: (...ids) => ids.forEach(id => document.getElementById(id).value = '')
-        };
-
-        // Comment pagination
-        const Comments = {
-            pageSize: 5,
-            currentPage: 1,
-            searchQuery: '',
-            displayComments: () => {
-                const commentsList = document.getElementById('comments-list');
-                const comments = Storage.getComments();
-                const search = Comments.searchQuery.toLowerCase();
-                const filteredComments = search
-                    ? comments.filter(c => c.name.toLowerCase().includes(search) || c.text.toLowerCase().includes(search))
-                    : comments;
-                const start = (Comments.currentPage - 1) * Comments.pageSize;
-                const paginatedComments = filteredComments.slice(start, start + Comments.pageSize);
-
-                commentsList.innerHTML = '';
-                paginatedComments.forEach(comment => {
-                    const commentCard = document.createElement('div');
-                    commentCard.className = 'comment-card';
-                    commentCard.innerHTML = `
-                        <p class="comment-author">${Utils.sanitizeInput(comment.name)}</p>
-                        <p class="comment-text">${Utils.sanitizeInput(comment.text)}</p>
-                        <p class="comment-text" style="font-size: 1.5em; color: #99ccff;">Carved on ${new Date(comment.timestamp).toLocaleString()}</p>
-                    `;
-                    commentsList.appendChild(commentCard);
-                });
-
-                Comments.renderPagination(filteredComments.length);
-            },
-            renderPagination: total => {
-                const pagination = document.getElementById('pagination');
-                const pageCount = Math.ceil(total / Comments.pageSize);
-                pagination.innerHTML = '';
-                for (let i = 1; i <= pageCount; i++) {
-                    const button = document.createElement('button');
-                    button.textContent = i;
-                    button.onclick = () => {
-                        Comments.currentPage = i;
-                        Comments.displayComments();
-                    };
-                    if (i === Comments.currentPage) button.classList.add('active');
-                    pagination.appendChild(button);
+            init: () => {
+                let analytics = JSON.parse(localStorage.getItem('analytics')) || {
+                    totalViews: 0,
+                    uniqueVisitors: [],
+                };
+                const visitorId = localStorage.getItem('visitorId') || Analytics.generateUUID();
+                if (!localStorage.getItem('visitorId')) {
+                    localStorage.setItem('visitorId', visitorId);
+                    analytics.uniqueVisitors.push(visitorId);
                 }
+                analytics.totalViews += 1;
+                localStorage.setItem('analytics', JSON.stringify(analytics));
+                document.getElementById('total-views').textContent = analytics.totalViews;
+                document.getElementById('unique-visits').textContent = analytics.uniqueVisitors.length;
             }
         };
 
-        // Event handlers
-        function registerUser() {
-            const name = Utils.sanitizeInput(document.getElementById('reg-name').value.trim());
-            const password = document.getElementById('reg-password').value;
-            const button = document.querySelector('#reg-name + input + button');
-
-            if (!name || !password) {
-                UI.showError('reg-error', 'Name and passphrase are required!');
-                return;
-            }
-
-            UI.setLoading(button, true);
-            setTimeout(() => {
-                let users = Storage.getUsers();
-                if (users.some(user => user.name === name)) {
-                    UI.showError('reg-error', 'This name is already bound!');
-                    UI.setLoading(button, false);
-                    return;
-                }
-
-                users.push({
-                    id: Utils.generateUUID(),
-                    name,
-                    password: Utils.hashPassword(password)
-                });
-
-                Storage.setUsers(users);
-                UI.showSuccess('reg-success', 'Your soul is bound! Scream into the abyss with comments.');
-                UI.clearFields('reg-name', 'reg-password');
-                UI.setLoading(button, false);
-            }, 500);
-        }
-
-        function postComment() {
-            const name = Utils.sanitizeInput(document.getElementById('comment-name').value.trim());
-            const password = document.getElementById('comment-password').value;
-            const text = Utils.sanitizeInput(document.getElementById('comment-text').value.trim());
-            const button = document.querySelector('#comment-text + button');
-
-            if (!name || !password || !text) {
-                UI.showError('comment-error', 'All fields must be filled to cry out!');
-                return;
-            }
-
-            UI.setLoading(button, true);
-            setTimeout(() => {
-                const users = Storage.getUsers();
-                const user = users.find(u => u.name === name && u.password === Utils.hashPassword(password));
-
-                if (!user) {
-                    UI.showError('comment-error', 'Wrong name or passphrase!');
-                    UI.setLoading(button, false);
-                    return;
-                }
-
-                let comments = Storage.getComments();
-                comments.push({
-                    userId: user.id,
-                    name: user.name,
-                    text,
-                    timestamp: new Date().toISOString()
-                });
-
-                Storage.setComments(comments);
-                UI.showSuccess('comment-success', 'Your cry pierces the void!');
-                UI.clearFields('comment-name', 'comment-password', 'comment-text');
-                Comments.displayComments();
-                UI.setLoading(button, false);
-            }, 500);
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            document.body.classList.toggle('light-mode');
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        }
-
-        function toggleAudio() {
-            const audio = document.getElementById('ambiance');
-            if (audio.paused) {
-                audio.play().catch(() => console.log('Audio playback failed'));
-            } else {
-                audio.pause();
-            }
-        }
-
+        // Event logging
         function logEvent(event) {
             console.log(event);
         }
 
-        // Initialize
-        document.getElementById('comment-search').addEventListener('input', e => {
-            Comments.searchQuery = e.target.value;
-            Comments.currentPage = 1;
-            Comments.displayComments();
-        });
-
+        // Initialize analytics on load
         window.onload = () => {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            document.body.classList.add(`${savedTheme}-mode`);
-            Comments.displayComments();
+            Analytics.init();
         };
     </script>
 </body>
