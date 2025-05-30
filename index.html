@@ -3,387 +3,451 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="JML Studio - Retro PSX horror games that draw you into misty, cerulean nightmares with haunting pixelated dread.">
+    <meta name="description" content="JML Studio - Retro PSX horror games with immersive pixel art and haunting atmospheres.">
     <meta name="keywords" content="JML Studio, retro horror, PSX games, indie horror, survival horror, pixel art">
     <meta name="author" content="JML Studio">
-    <title>JML Studio - Cerulean Nightmares</title>
+    <title>JML Studio - Retro Horror Games</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" integrity="sha384-4g6zW6f5zW7zX6zW5zX6zW5zX6zW5zX6zW5zX6zW5zX6zW5zX6zW5zX6zW5zX6z" crossorigin="anonymous">
     <link rel="icon" href="https://i.postimg.cc/0b6ppScJ/JML-Logo-01.png" type="image/png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&family=Pixel+Operator:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400;700&display=swap">
     <style>
         :root {
-            --deep-navy: #0a1c2b;
-            --soft-cerulean: #4a90e2;
-            --pale-silver: #d9e4ec;
-            --misty-glow: rgba(74, 144, 226, 0.3);
+            --midnight-black: #080808;
+            --blood-red: #c81010;
+            --deep-red: #8b0000;
+            --ghost-white: #e8e8e8;
+            --static-glow: rgba(200, 16, 16, 0.5);
+            --red-pulse: rgba(200, 16, 16, 0.2);
             --transition: all 0.3s ease;
         }
 
         body {
             margin: 0;
-            background: var(--deep-navy);
-            color: var(--pale-silver);
-            font-family: 'Pixel Operator', monospace;
+            background: linear-gradient(180deg, var(--midnight-black), #151515);
+            color: var(--ghost-white);
+            font-family: 'VT323', monospace;
             image-rendering: pixelated;
             overflow-x: hidden;
             position: relative;
         }
 
-        .crt-overlay {
+        .crt-vignette {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(10, 28, 43, 0.7), rgba(0, 10, 20, 0.8));
+            background: radial-gradient(circle at center, transparent 65%, rgba(0, 0, 0, 0.95) 100%);
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
             pointer-events: none;
             z-index: 1000;
-            opacity: 0.5;
-            animation: crtFlicker 5s ease-in-out infinite;
+            animation: crtFlicker 3.5s ease-in-out infinite;
         }
 
-        .crt-overlay::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(0, 0, 20, 0.3), rgba(0, 0, 20, 0.3) 1px, transparent 1px, transparent 3px);
-            mix-blend-mode: overlay;
-            animation: scanline 3s linear infinite;
-        }
-
-        .mist-bg {
+        .static-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(74, 144, 226, 0.15), rgba(10, 28, 43, 0.8));
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="url(#noise)"/><defs><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="1" result="turbulence"/><feDisplacementMap in="SourceGraphic" in2="turbulence" scale="4" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>');
+            opacity: 0.2;
             z-index: 1;
-            animation: mistFlow 50s linear infinite;
-            opacity: 0.6;
+            animation: staticShift 7s linear infinite;
         }
 
-        .particle-layer {
+        .red-pulse {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="%234a90e2" opacity="0.2"/></svg>') repeat;
-            z-index: 2;
-            animation: particleDrift 70s linear infinite;
+            background: radial-gradient(circle at center, var(--red-pulse) 20%, transparent 70%);
             opacity: 0.3;
+            z-index: 2;
+            animation: pulseGlow 5s ease-in-out infinite;
         }
 
         header, main, footer {
-            max-width: 1350px;
-            margin: 40px auto;
-            padding: 50px;
-            background: linear-gradient(145deg, rgba(10, 28, 43, 0.95), rgba(0, 10, 20, 0.9));
-            border: 3px solid var(--soft-cerulean);
-            border-radius: 20px;
-            box-shadow: 0 0 20px var(--misty-glow);
+            max-width: 1366px;
+            margin: 50px auto;
+            padding: 60px;
+            background: rgba(10, 10, 10, 0.98);
+            border: 4px solid var(--deep-red);
+            border-radius: 15px;
+            box-shadow: 0 0 25px var(--static-glow);
             position: relative;
             z-index: 3;
-            animation: glowBorder 4s ease-in-out infinite;
         }
 
         .logo {
             display: block;
             margin: 0 auto;
             width: 100%;
-            max-width: 340px;
-            filter: drop-shadow(0 0 15px var(--soft-cerulean));
-            animation: fadeIn 3s ease-out;
+            max-width: 400px;
+            filter: drop-shadow(0 0 15px var(--blood-red)) saturate(1.2);
+            animation: logoPulse 4s ease-in-out infinite;
             border-radius: 12px;
             loading: lazy;
         }
 
         h1 {
-            font-family: 'VT323', monospace;
-            font-size: 4em;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 4.5em;
             text-align: center;
             text-transform: uppercase;
-            letter-spacing: 7px;
-            color: var(--soft-cerulean);
-            text-shadow: 0 0 10px var(--misty-glow);
-            animation: softGlow 3s ease-in-out infinite;
-            margin-bottom: 20px;
+            letter-spacing: 8px;
+            color: var(--blood-red);
+            text-shadow: 0 0 12px var(--static-glow), 3px 3px 0px rgba(139, 0, 0, 0.3);
+            animation: glitchText 2s steps(10) infinite;
+            margin-bottom: 25px;
         }
 
         h2 {
-            font-family: 'VT323', monospace;
-            font-size: 2.6em;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2.8em;
             text-transform: uppercase;
-            letter-spacing: 5px;
-            color: var(--soft-cerulean);
-            text-shadow: 0 0 8px var(--misty-glow);
-            margin-bottom: 25px;
+            letter-spacing: 6px;
+            color: var(--blood-red);
+            text-shadow: 0 0 10px var(--static-glow);
+            margin-bottom: 30px;
         }
 
         p {
             font-size: 1.5em;
             line-height: 2;
-            color: var(--pale-silver);
-            text-shadow: 0 0 3px var(--misty-glow);
+            color: var(--ghost-white);
+            text-shadow: 0 0 4px var(--static-glow);
         }
 
         .link-button, .play-button {
             display: inline-block;
-            padding: 15px 30px;
-            margin: 12px;
-            border: 2px solid var(--soft-cerulean);
-            background: rgba(10, 28, 43, 0.8);
-            color: var(--soft-cerulean);
+            padding: 16px 35px;
+            margin: 15px;
+            border: 4px solid var(--deep-red);
+            background: rgba(10, 10, 10, 0.95);
+            color: var(--blood-red);
             font-family: 'VT323', monospace;
-            font-size: 1.2em;
+            font-size: 1.3em;
+            font-weight: 700;
             text-transform: uppercase;
             text-decoration: none;
             transition: var(--transition);
-            border-radius: 10px;
-            box-shadow: 0 0 15px var(--misty-glow);
+            border-radius: 12px;
+            box-shadow: 0 0 15px var(--static-glow);
             cursor: pointer;
             position: relative;
             overflow: hidden;
         }
 
-        .link-button::before, .play-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, var(--soft-cerulean), transparent);
-            transition: 0.5s;
-        }
-
-        .link-button:hover::before, .play-button:hover::before {
-            left: 100%;
-        }
-
         .link-button:hover, .play-button:hover {
-            background: var(--soft-cerulean);
-            color: var(--deep-navy);
-            box-shadow: 0 0 25px var(--soft-cerulean);
-            transform: scale(1.05);
+            background: var(--blood-red);
+            color: var(--midnight-black);
+            box-shadow: 0 0 30px var(--blood-red);
+            transform: translateY(-4px) scale(1.08);
+            animation: glitchHover 0.5s ease;
         }
 
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 40px;
-            margin: 50px 0;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 50px;
+            margin: 60px 0;
         }
 
         .game-card {
-            border: 2px solid var(--soft-cerulean);
-            padding: 30px;
-            background: rgba(10, 28, 43, 0.9);
+            border: 4px solid var(--deep-red);
+            padding: 35px;
+            background: rgba(15, 15, 15, 0.95);
             border-radius: 15px;
-            box-shadow: 0 0 15px var(--misty-glow);
+            box-shadow: 0 0 20px var(--static-glow);
             transition: var(--transition);
-            animation: cardFade 1.5s ease-out;
+            animation: cardShake 7s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
         }
 
         .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 25px var(--soft-cerulean);
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 0 40px var(--blood-red);
+            background: rgba(25, 25, 25, 0.95);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 10px var(--static-glow)) saturate(1.2);
+            transition: var(--transition);
+        }
+
+        .game-image:hover {
+            filter: drop-shadow(0 0 20px var(--blood-red)) brightness(1.15);
         }
 
         .game-title {
-            font-family: 'VT323', monospace;
-            font-size: 2em;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2.2em;
             text-transform: uppercase;
-            color: var(--soft-cerulean);
-            text-shadow: 0 0 6px var(--misty-glow);
+            color: var(--blood-red);
+            text-shadow: 0 0 8px var(--static-glow);
+            margin-bottom: 20px;
         }
 
         .game-description {
-            color: var(--pale-silver);
-            margin: 20px 0;
+            color: var(--ghost-white);
+            margin: 25px 0;
             font-size: 1.4em;
+            line-height: 1.8;
         }
 
         nav {
             position: sticky;
             top: 0;
-            background: rgba(10, 28, 43, 0.95);
-            padding: 20px 0;
+            background: rgba(10, 10, 10, 0.98);
+            padding: 25px 0;
             z-index: 4;
             text-align: center;
-            border-bottom: 2px solid var(--soft-cerulean);
+            border-bottom: 4px solid var(--deep-red);
+            box-shadow: 0 0 20px var(--static-glow);
         }
 
         nav a {
-            margin: 0 30px;
-            font-family: 'VT323', monospace;
-            font-size: 1.3em;
+            margin: 0 35px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1.4em;
             text-transform: uppercase;
-            color: var(--soft-cerulean);
+            color: var(--blood-red);
             text-decoration: none;
             transition: var(--transition);
-            text-shadow: 0 0 4px var(--misty-glow);
+            text-shadow: 0 0 5px var(--static-glow);
         }
 
         nav a:hover {
-            color: var(--deep-navy);
-            background: var(--soft-cerulean);
-            padding: 8px 16px;
-            border-radius: 8px;
+            color: var(--midnight-black);
+            background: var(--blood-red);
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px var(--blood-red);
+        }
+
+        .updates-list {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .updates-list li {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 20px;
+            font-size: 1.3em;
+            color: var(--ghost-white);
+            text-shadow: 0 0 4px var(--static-glow);
+        }
+
+        .updates-list li:before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--blood-red);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--static-glow);
+        }
+
+        .updates-list:after {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--deep-red);
+            opacity: 0.5;
         }
 
         .analytics-hud {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(0, 10, 20, 0.9);
-            border: 2px solid var(--soft-cerulean);
-            border-radius: 12px;
+            margin-top: 40px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 4px solid var(--deep-red);
+            border-radius: 15px;
             text-align: center;
             font-family: 'VT323', monospace;
-            font-size: 1.1em;
-            color: var(--pale-silver);
-            text-shadow: 0 0 4px var(--misty-glow);
-            box-shadow: 0 0 15px var(--misty-glow);
+            font-size: 1.2em;
+            color: var(--ghost-white);
+            text-shadow: 0 0 5px var(--static-glow);
+            box-shadow: 0 0 20px var(--static-glow);
         }
 
         .analytics-hud span {
-            color: var(--soft-cerulean);
-            animation: counterGlow 2s ease-in-out infinite;
+            color: var(--blood-red);
+            animation: counterGlow 1.5s ease-in-out infinite;
         }
 
         @keyframes crtFlicker {
-            0% { opacity: 0.5; }
-            50% { opacity: 0.4; }
-            100% { opacity: 0.5; }
+            0%, 100% { opacity: 0.75; filter: brightness(1); }
+            50% { opacity: 0.65; filter: brightness(0.9); }
+            5%, 95% { transform: translate(1px, 1px); }
         }
 
-        @keyframes scanline {
+        @keyframes staticShift {
             0% { background-position: 0 0; }
-            100% { background-position: 0 60px; }
+            100% { background-position: 70px 70px; }
         }
 
-        @keyframes mistFlow {
-            0% { background-position: 0 0; }
-            100% { background-position: 150px 150px; }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
         }
 
-        @keyframes particleDrift {
-            0% { background-position: 0 0; }
-            100% { background-position: 100px 100px; }
+        @keyframes logoPulse {
+            0%, 100% { filter: drop-shadow(0 0 15px var(--blood-red)) saturate(1.2); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 10px var(--deep-red)) saturate(1.1) brightness(0.85); transform: scale(0.98); }
         }
 
         @keyframes fadeIn {
-            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        @keyframes softGlow {
-            0% { text-shadow: 0 0 10px var(--misty-glow); }
-            50% { text-shadow: 0 0 15px var(--misty-glow); }
-            100% { text-shadow: 0 0 10px var(--misty-glow); }
+        @keyframes glitchText {
+            0% { transform: translate(0, 0); }
+            10% { transform: translate(-4px, 4px); }
+            20% { transform: translate(4px, -4px); }
+            30% { transform: translate(-3px, 3px); }
+            100% { transform: translate(0, 0); }
         }
 
-        @keyframes glowBorder {
-            0% { border-color: var(--soft-cerulean); }
-            50% { border-color: #3a80d2; }
-            100% { border-color: var(--soft-cerulean); }
+        @keyframes glitchHover {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(4px, -4px); }
+            50% { transform: translate(-4px, 4px); }
+            75% { transform: translate(3px, -3px); }
+            100% { transform: translate(0, 0); }
         }
 
-        @keyframes cardFade {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+        @keyframes cardShake {
+            0% { transform: translateX(0); }
+            15% { transform: translateX(-5px); }
+            30% { transform: translateX(5px); }
+            45% { transform: translateX(-3px); }
+            60% { transform: translateX(3px); }
+            100% { transform: translateX(0); }
         }
 
         @keyframes counterGlow {
-            0% { text-shadow: 0 0 6px var(--soft-cerulean); }
-            50% { text-shadow: 0 0 10px var(--soft-cerulean); }
-            100% { text-shadow: 0 0 6px var(--soft-cerulean); }
+            0% { text-shadow: 0 0 8px var(--blood-red); }
+            50% { text-shadow: 0 0 15px var(--blood-red); }
+            100% { text-shadow: 0 0 8px var(--blood-red); }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
+            h1 { font-size: 3.5em; }
+            h2 { font-size: 2.2em; }
+            p { font-size: 1.3em; }
+            header, main, footer { padding: 40px; margin: 30px; }
+            .game-card { padding: 25px; }
+            .logo { max-width: 300px; }
+            .game-grid { grid-template-columns: 1fr; gap: 40px; }
+            .game-image { height: 180px; }
+            nav a { display: block; margin: 12px 0; font-size: 1.2em; }
+            .analytics-hud { font-size: 1.1em; }
+            .link-button, .play-button { padding: 14px 30px; font-size: 1.2em; }
+            .updates-list li { font-size: 1.2em; }
+        }
+
+        @media (max-width: 480px) {
             h1 { font-size: 2.8em; }
-            h2 { font-size: 2em; }
+            h2 { font-size: 1.8em; }
             p { font-size: 1.2em; }
-            header, main, footer { padding: 25px; margin: 20px; }
+            header, main, footer { padding: 30px; margin: 20px; }
             .game-card { padding: 20px; }
-            .logo { max-width: 260px; }
-            .game-grid { grid-template-columns: 1fr; }
-            nav a { display: block; margin: 10px 0; font-size: 1.1em; }
-            .analytics-hud { font-size: 0.9em; }
-            .link-button, .play-button { padding: 12px 24px; font-size: 1.1em; }
+            .logo { max-width: 250px; }
+            .game-image { height: 150px; }
+            nav a { font-size: 1.1em; }
+            .analytics-hud { font-size: 1em; }
+            .link-button, .play-button { padding: 12px 25px; font-size: 1.1em; }
+            .updates-list li { font-size: 1.1em; }
         }
     </style>
 </head>
 <body>
-    <div class="crt-overlay"></div>
-    <div class="mist-bg"></div>
-    <div class="particle-layer"></div>
+    <div class="crt-vignette"></div>
+    <div class="static-overlay"></div>
+    <div class="red-pulse"></div>
     <nav>
-        <a href="#mission">Our Terror</a>
-        <a href="#games">Realms</a>
-        <a href="#updates">Patches</a>
+        <a href="#mission" onclick="trackEvent('nav_click', 'About Us')">About Us</a>
+        <a href="#games" onclick="trackEvent('nav_click', 'Our Games')">Our Games</a>
+        <a href="#updates" onclick="trackEvent('nav_click', 'Updates')">Updates</a>
     </nav>
     <header role="banner">
         <img src="https://i.postimg.cc/0b6ppScJ/JML-Logo-01.png" alt="JML Studio Logo" class="logo" loading="lazy">
         <h1>JML Studio</h1>
-        <p class="text-center text-2xl mt-4">Cerulean Nightmares in Pixelated Dread</p>
+        <p class="text-center text-2xl mt-6 font-bold">Retro Horror Games with Pixel Art</p>
     </header>
     <main role="main">
-        <section class="mb-20" id="mission" aria-labelledby="mission">
-            <h2>Our Terror</h2>
+        <section class="mb-24" id="mission" aria-labelledby="mission">
+            <h2>About Us</h2>
             <p>
-                JML Studio crafts retro PSX horrors that pull you into misty, cerulean nightmares. Our low-poly realms, shimmering with eerie CRT glow, unravel your sense of reality. 
-                Inspired by '90s survival horror, we conjure terrors that linger like static on an old screen. Will you face the mist?
+                JML Studio creates retro-inspired PSX horror games with immersive pixel art and eerie atmospheres. Drawing from '90s survival horror classics, our games blend low-poly visuals with gripping narratives to deliver unforgettable experiences. Explore our worlds and face the unknown.
             </p>
         </section>
-        <section class="mb-20" id="games" aria-labelledby="games">
-            <h2>Misty Realms</h2>
+        <section class="mb-24" id="games" aria-labelledby="games">
+            <h2>Our Games</h2>
             <p>
-                Plunge into our cursed creations on <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="link-button" onclick="logEvent('Itch.io community clicked')">Itch.io</a>. 
-                From fog-shrouded diners to desolate voids, our games summon haunting dread.
+                Discover our horror games on <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="link-button" onclick="trackEvent('external_link', 'Itch.io community')">Itch.io</a>. 
+                Each title offers unique settings and chilling gameplay inspired by retro aesthetics.
             </p>
             <div class="game-grid">
                 <div class="game-card">
+                    <img src="https://via.placeholder.com/480x220.png?text=Burger+Shop" alt="Burger Shop Game" class="game-image" loading="lazy">
                     <h3 class="game-title">Burger Shop</h3>
                     <p class="game-description">
-                        The Burger Shop hums with ghostly light, its polygons fading into misty shadows. Survive its pixelated dread.
+                        Explore a haunted burger shop where eerie lights and shadowy corners hide unsettling secrets. Survive a night of pixelated horror in this retro-style adventure.
                     </p>
-                    <a href="https://agamedeveloperstudio.itch.io/whispers-in-the-dark-burger-shop" target="_blank" rel="noopener noreferrer" class="play-button" onclick="logEvent('Burger Shop Play Now clicked')">Enter the Mist</a>
+                    <a href="https://agamedeveloperstudio.itch.io/whispers-in-the-dark-burger-shop" target="_blank" rel="noopener noreferrer" class="play-button" onclick="trackEvent('game_play', 'Burger Shop')">Play Now</a>
                 </div>
                 <div class="game-card">
+                    <img src="https://via.placeholder.com/480x220.png?text=Trailer+Park" alt="Trailer Park Game" class="game-image" loading="lazy">
                     <h3 class="game-title">Trailer Park</h3>
                     <p class="game-description">
-                        The Trailer Park lies cloaked in fog, its silence hiding horrors in cerulean decay. Can you escape the static?
+                        Navigate a desolate trailer park shrouded in mystery, where silence conceals terrifying threats. Can you uncover its dark secrets and escape?
                     </p>
-                    <a href="https://agamedeveloperstudio.itch.io/trailer-park" target="_blank" rel="noopener noreferrer" class="play-button" onclick="logEvent('Trailer Park Play Now clicked')">Defy the Void</a>
+                    <a href="https://agamedeveloperstudio.itch.io/trailer-park" target="_blank" rel="noopener noreferrer" class="play-button" onclick="trackEvent('game_play', 'Trailer Park')">Play Now</a>
                 </div>
             </div>
         </section>
-        <section class="mb-20" id="updates" aria-labelledby="updates">
-            <h2>Patches from the Abyss</h2>
-            <p>Receive the latest signals from our misty realms.</p>
+        <section class="mb-24" id="updates" aria-labelledby="updates">
+            <h2>Website Updates</h2>
+            <p>Stay updated on the latest improvements to our website.</p>
             <ul class="updates-list">
-                <li><strong>May 05, 2025:</strong> Major patch <em>(Version 2.2.5)</em></li>
-                <li><strong>April 30, 2025:</strong> Major patch <em>(Version 2.0.1.5)</em></li>
-                <li><strong>April 29, 2025:</strong> Major patch <em>(Version 1.9.9)</em></li>
-                <li><strong>April 28, 2025:</strong> Realm unveiled <em>(Version 1.2.2)</em></li>
-                <li><strong>April 15, 2025:</strong> First static <em>(Version 1.2.1)</em></li>
+                <li><strong>May 30, 2025:</strong> Major redesign <em>(Version 3.0)</em> - Introduced new red-themed design, enhanced CRT effects, and timeline update layout.</li>
+                <li><strong>May 15, 2025:</strong> Analytics upgrade <em>(Version 2.1)</em> - Added real-time analytics with session duration and click tracking.</li>
+                <li><strong>April 20, 2025:</strong> Mobile optimization <em>(Version 2.0)</em> - Improved responsive design for better mobile experience.</li>
+                <li><strong>April 10, 2025:</strong> Visual refresh <em>(Version 1.1)</em> - Updated fonts and added game card images.</li>
+                <li><strong>March 25, 2025:</strong> Initial launch <em>(Version 1.0)</em> - Launched JML Studio website with retro PSX aesthetic.</li>
             </ul>
-            <p class="version-info">Current Patch: 2.2.5 (Deployed May 05, 2025)</p>
+            <p class="version-info mt-6">Current Website Version: 3.0 (Released May 30, 2025)</p>
         </section>
     </main>
     <footer role="contentinfo">
-        <p>© 2025 JML Studio. All souls lost to the mist.</p>
-        <p class="mt-4">
-            <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="link-button" onclick="logEvent('Footer Itch.io clicked')">Itch.io</a>
-            <a href="https://discord.gg/quQzQAa2nP" target="_blank" rel="noopener noreferrer" class="link-button" onclick="logEvent('Footer Discord clicked')">Discord</a>
+        <p>© 2025 JML Studio. All rights reserved.</p>
+        <p class="mt-8">
+            <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="link-button" onclick="trackEvent('footer_link', 'Itch.io')">Itch.io</a>
+            <a href="https://discord.gg/quQzQAa2nP" target="_blank" rel="noopener noreferrer" class="link-button" onclick="trackEvent('footer_link', 'Discord')">Discord</a>
         </p>
         <div class="analytics-hud">
-            <p>Souls Entered: <span id="total-views">0</span> | Lost Wanderers: <span id="unique-visits">0</span></p>
+            <p>
+                Page Views: <span id="page-views">0</span> | 
+                Unique Visitors: <span id="unique-visitors">0</span> | 
+                Avg. Session: <span id="avg-session">0s</span> | 
+                Total Clicks: <span id="total-clicks">0</span>
+            </p>
         </div>
     </footer>
     <script>
@@ -393,26 +457,77 @@
                 const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
             }),
-            init: () => {
-                let analytics = JSON.parse(localStorage.getItem('analytics')) || {
-                    totalViews: 0,
-                    uniqueVisitors: [],
-                };
+            init: async () => {
                 const visitorId = localStorage.getItem('visitorId') || Analytics.generateUUID();
-                if (!localStorage.getItem('visitorId')) {
-                    localStorage.setItem('visitorId', visitorId);
-                    analytics.uniqueVisitors.push(visitorId);
+                localStorage.setItem('visitorId', visitorId);
+                
+                const sessionStart = Date.now();
+                let clickCount = 0;
+
+                // Track page view
+                Analytics.sendEvent('page_view', {
+                    visitorId,
+                    page: window.location.pathname,
+                    timestamp: new Date().toISOString()
+                });
+
+                // Update click count on any click
+                document.addEventListener('click', () => {
+                    clickCount++;
+                    Analytics.sendEvent('click', {
+                        visitorId,
+                        element: event.target.tagName,
+                        timestamp: new Date().toISOString()
+                    });
+                    document.getElementById('total-clicks').textContent = clickCount;
+                });
+
+                // Track session duration on unload
+                window.addEventListener('beforeunload', () => {
+                    const sessionDuration = (Date.now() - sessionStart) / 1000;
+                    Analytics.sendEvent('session_end', {
+                        visitorId,
+                        duration: sessionDuration,
+                        timestamp: new Date().toISOString()
+                    });
+                });
+
+                // Fetch and display analytics
+                try {
+                    const response = await fetch('/api/analytics', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const data = await response.json();
+                    document.getElementById('page-views').textContent = data.pageViews || 0;
+                    document.getElementById('unique-visitors').textContent = data.uniqueVisitors || 0;
+                    document.getElementById('avg-session').textContent = data.avgSession ? `${Math.round(data.avgSession)}s` : '0s';
+                    document.getElementById('total-clicks').textContent = clickCount;
+                } catch (error) {
+                    console.error('Analytics fetch error:', error);
                 }
-                analytics.totalViews += 1;
-                localStorage.setItem('analytics', JSON.stringify(analytics));
-                document.getElementById('total-views').textContent = analytics.totalViews;
-                document.getElementById('unique-visits').textContent = analytics.uniqueVisitors.length;
+            },
+            sendEvent: async (eventType, data) => {
+                try {
+                    await fetch('/api/analytics', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ eventType, data })
+                    });
+                } catch (error) {
+                    console.error('Analytics send error:', error);
+                }
             }
         };
 
-        // Event logging
-        function logEvent(event) {
-            console.log(event);
+        // Event tracking
+        function trackEvent(category, action) {
+            Analytics.sendEvent('interaction', {
+                category,
+                action,
+                visitorId: localStorage.getItem('visitorId'),
+                timestamp: new Date().toISOString()
+            });
         }
 
         // Initialize analytics on load
