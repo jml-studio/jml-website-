@@ -22,6 +22,7 @@
             --light-bg: #f0f0f0;
             --light-text: #1a1a1a;
             --light-shadow: rgba(0, 0, 0, 0.3);
+            --star-color: #ffd700;
         }
 
         body {
@@ -447,6 +448,145 @@
             box-shadow: 0 0 15px var(--light-shadow);
         }
 
+        .rating-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .star {
+            font-size: 1.5em;
+            cursor: pointer;
+            color: var(--ghost-white);
+            transition: var(--transition);
+        }
+
+        body.light-mode .star {
+            color: var(--light-text);
+        }
+
+        .star.filled {
+            color: var(--blood-red);
+        }
+
+        .star:hover {
+            transform: scale(1.2);
+        }
+
+        .average-rating {
+            font-family: 'VT323', monospace;
+            font-size: 1.2em;
+            color: var(--ghost-white);
+            text-shadow: 0 0 4px var(--static-glow);
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        body.light-mode .average-rating {
+            color: var(--light-text);
+            text-shadow: none;
+        }
+
+        .rating-feedback {
+            font-family: 'VT323', monospace;
+            font-size: 1.1em;
+            color: var(--blood-red);
+            text-align: center;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        body.light-mode .rating-feedback {
+            color: var(--light-text);
+        }
+
+        .rating-feedback.show {
+            opacity: 1;
+        }
+
+        .vote-button {
+            display: inline-block;
+            padding: 8px 20px;
+            margin: 10px auto;
+            border: 2px solid var(--deep-red);
+            background: rgba(10, 10, 10, 0.95);
+            color: var(--blood-red);
+            font-family: 'VT323', monospace;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        body.light-mode .vote-button {
+            border: 2px solid var(--light-text);
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--light-text);
+        }
+
+        .vote-button:hover:not(:disabled) {
+            background: var(--blood-red);
+            color: var(--midnight-black);
+            box-shadow: 0 0 15px var(--blood-red);
+        }
+
+        body.light-mode .vote-button:hover:not(:disabled) {
+            background: var(--light-text);
+            color: var(--light-bg);
+            box-shadow: 0 0 15px var(--light-shadow);
+        }
+
+        .vote-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .site-rating-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 10, 0.98);
+            border: 4px solid var(--deep-red);
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 5;
+            display: none;
+            text-align: center;
+            box-shadow: 0 0 20px var(--static-glow);
+        }
+
+        body.light-mode .site-rating-prompt {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--light-text);
+            box-shadow: 0 0 20px var(--light-shadow);
+        }
+
+        .site-rating-prompt p {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .site-rating-section {
+            margin-top: 40px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 4px solid var(--deep-red);
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px var(--static-glow);
+        }
+
+        body.light-mode .site-rating-section {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--light-text);
+            box-shadow: 0 0 20px var(--light-shadow);
+        }
+
         @keyframes crtFlicker {
             0%, 100% { opacity: 0.75; filter: brightness(1); }
             50% { opacity: 0.65; filter: brightness(0.9); }
@@ -466,11 +606,6 @@
         @keyframes logoPulse {
             0%, 100% { filter: drop-shadow(0 0 15px var(--blood-red)) saturate(1.2); transform: scale(1); }
             50% { filter: drop-shadow(0 0 10px var(--deep-red)) saturate(1.1) brightness(0.85); transform: scale(0.98); }
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
         }
 
         @keyframes glitchText {
@@ -519,6 +654,7 @@
             .updates-list li { font-size: 1.2em; }
             .settings-bar { flex-direction: column; top: 5px; right: 5px; }
             .settings-button { font-size: 0.9em; padding: 8px 15px; }
+            .site-rating-prompt { width: 80%; }
         }
 
         @media (max-width: 480px) {
@@ -534,6 +670,7 @@
             .link-button, .play-button { padding: 12px 25px; font-size: 1.1em; }
             .updates-list li { font-size: 1.1em; }
             .settings-button { font-size: 0.8em; padding: 6px 12px; }
+            .site-rating-prompt { width: 90%; }
         }
     </style>
 </head>
@@ -549,7 +686,7 @@
     <nav>
         <a href="#mission" onclick="trackEvent('nav_click', 'About Us')">About Us</a>
         <a href="#games" onclick="trackEvent('nav_click', 'Our Games')">Our Games</a>
-        <a href "#updates" onclick="trackEvent('nav_click', 'Updates')">Updates</a>
+        <a href="#updates" onclick="trackEvent('nav_click', 'Updates')">Updates</a>
     </nav>
     <header role="banner">
         <img src="https://i.postimg.cc/0b6ppScJ/JML-Logo-01.png" alt="JML Studio Logo" class="logo" loading="lazy">
@@ -576,6 +713,16 @@
                     <p class="game-description" data-i18n="burger-shop-desc">
                         Explore a haunted burger shop where eerie lights and shadowy corners hide unsettling secrets. Survive a night of pixelated horror in this retro-style adventure.
                     </p>
+                    <div class="rating-container" data-game="burger-shop">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                    <button class="vote-button" id="burger-shop-vote" data-game="burger-shop" disabled data-i18n="vote">VOTE</button>
+                    <p class="average-rating" data-i18n="average-rating">Average Rating: <span id="burger-shop-rating">0</span> (0 votes)</p>
+                    <p class="rating-feedback" id="burger-shop-feedback"></p>
                     <a href="https://jmlgamestudio.itch.io/whispers-in-the-dark-burger-shop" target="_blank" rel="noopener noreferrer" class="play-button" data-i18n="play-now">Play Now</a>
                 </div>
                 <div class="game-card">
@@ -584,6 +731,16 @@
                     <p class="game-description" data-i18n="trailer-park-desc">
                         Navigate a desolate trailer park shrouded in mystery, where silence conceals terrifying threats. Can you uncover its dark secrets and escape?
                     </p>
+                    <div class="rating-container" data-game="trailer-park">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                    <button class="vote-button" id="trailer-park-vote" data-game="trailer-park" disabled data-i18n="vote">VOTE</button>
+                    <p class="average-rating" data-i18n="average-rating">Average Rating: <span id="trailer-park-rating">0</span> (0 votes)</p>
+                    <p class="rating-feedback" id="trailer-park-feedback"></p>
                     <a href="https://jmlgamestudio.itch.io/trailer-park" target="_blank" rel="noopener noreferrer" class="play-button" data-i18n="play-now">Play Now</a>
                 </div>
             </div>
@@ -592,13 +749,13 @@
             <h2 data-i18n="updates">Website Updates</h2>
             <p data-i18n="updates-text">Stay updated on the latest improvements to our website.</p>
             <ul class="updates-list">
-                <li data-i18n="update-1"><strong>May 30, 2025:</strong> Major redesign <em>(Version 3.0)</em> - Introduced new red-themed design, enhanced CRT effects, and timeline update layout.</li>
-                <li data-i18n="update-2"><strong>May 15, 2025:</strong> Analytics upgrade <em>(Version 2.1)</em> - Added real-time analytics with session duration and click tracking.</li>
-                <li data-i18n="update-3"><strong>April 20, 2025:</strong> Mobile optimization <em>(Version 2.0)</em> - Improved responsive design for better mobile experience.</li>
-                <li data-i18n="update-4"><strong>April 10, 2025:</strong> Visual refresh <em>(Version 1.1)</em> - Updated fonts and added game card images.</li>
-                <li data-i18n="update-5"><strong>March 25, 2025:</strong> Initial launch <em>(Version 1.0)</em> - Launched JML Studio website with retro PSX aesthetic.</li>
+                <li data-i18n="update-1"><strong>June 1, 2025:</strong> Enhanced rating system <em>(Version 3.2)</em> - Added red stars, VOTE button, and analytics for rating submissions.</li>
+                <li data-i18n="update-2"><strong>June 1, 2025:</strong> Rating system improved <em>(Version 3.1)</em> - Added user feedback and single-rating mechanics for games and site.</li>
+                <li data-i18n="update-3"><strong>May 30, 2025:</strong> Major redesign <em>(Version 3.0)</em> - Introduced new red-themed design, enhanced CRT effects, and timeline update layout.</li>
+                <li data-i18n="update-4"><strong>May 15, 2025:</strong> Analytics upgrade <em>(Version 2.1)</em> - Added real-time analytics with session duration and click tracking.</li>
+                <li data-i18n="update-5"><strong>April 20, 2025:</strong> Mobile optimization <em>(Version 2.0)</em> - Improved responsive design for better mobile experience.</li>
             </ul>
-            <p class="version-info mt-6" data-i18n="version-info">Current Website Version: 3.0 (Released May 30, 2025)</p>
+            <p class="version-info mt-6" data-i18n="version-info">Current Website Version: 3.2 (Released June 1, 2025)</p>
         </section>
     </main>
     <footer role="contentinfo">
@@ -614,6 +771,32 @@
                 <span data-i18n="avg-session">Avg. Session:</span> <span id="avg-session">0s</span> | 
                 <span data-i18n="total-clicks">Total Clicks:</span> <span id="total-clicks">0</span>
             </p>
+        </div>
+        <div class="site-rating-section">
+            <p data-i18n="rate-site">Rate Our Website</p>
+            <div class="rating-container" data-game="site">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+            <button class="vote-button" id="site-vote" data-game="site" disabled data-i18n="vote">VOTE</button>
+            <p class="average-rating" data-i18n="average-rating">Average Rating: <span id="site-rating">0</span> (0 votes)</p>
+            <p class="rating-feedback" id="site-feedback"></p>
+        </div>
+        <div class="site-rating-prompt" id="site-rating-prompt">
+            <p data-i18n="rate-site">Please rate our website!</p>
+            <div class="rating-container" data-game="site-prompt">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+            <button class="vote-button" id="site-prompt-vote" data-game="site-prompt" disabled data-i18n="vote">VOTE</button>
+            <p class="average-rating" data-i18n="average-rating">Average Rating: <span id="site-prompt-rating">0</span> (0 votes)</p>
+            <p class="rating-feedback" id="site-prompt-feedback"></p>
         </div>
     </footer>
     <script>
@@ -633,17 +816,22 @@
                 "play-now": "Play Now",
                 updates: "Website Updates",
                 "updates-text": "Stay updated on the latest improvements to our website.",
-                "update-1": "<strong>May 30, 2025:</strong> Major redesign <em>(Version 3.0)</em> - Introduced new red-themed design, enhanced CRT effects, and timeline update layout.",
-                "update-2": "<strong>May 15, 2025:</strong> Analytics upgrade <em>(Version 2.1)</em> - Added real-time analytics with session duration and click tracking.",
-                "update-3": "<strong>April 20, 2025:</strong> Mobile optimization <em>(Version 2.0)</em> - Improved responsive design for better mobile experience.",
-                "update-4": "<strong>April 10, 2025:</strong> Visual refresh <em>(Version 1.1)</em> - Updated fonts and added game card images.",
-                "update-5": "<strong>March 25, 2025:</strong> Initial launch <em>(Version 1.0)</em> - Launched JML Studio website with retro PSX aesthetic.",
-                "version-info": "Current Website Version: 3.0 (Released May 30, 2025)",
+                "update-1": "<strong>June 1, 2025:</strong> Enhanced rating system <em>(Version 3.2)</em> - Added red stars, VOTE button, and analytics for rating submissions.",
+                "update-2": "<strong>June 1, 2025:</strong> Rating system improved <em>(Version 3.1)</em> - Added user feedback and single-rating mechanics for games and site.",
+                "update-3": "<strong>May 30, 2025:</strong> Major redesign <em>(Version 3.0)</em> - Introduced new red-themed design, enhanced CRT effects, and timeline update layout.",
+                "update-4": "<strong>May 15, 2025:</strong> Analytics upgrade <em>(Version 2.1)</em> - Added real-time analytics with session duration and click tracking.",
+                "update-5": "<strong>April 20, 2025:</strong> Mobile optimization <em>(Version 2.0)</em> - Improved responsive design for better mobile experience.",
+                "version-info": "Current Website Version: 3.2 (Released June 1, 2025)",
                 "footer-copyright": "© 2025 JML Studio. All rights reserved.",
                 "page-views": "Page Views:",
                 "unique-visitors": "Unique Visitors:",
                 "avg-session": "Avg. Session:",
-                "total-clicks": "Total Clicks:"
+                "total-clicks": "Total Clicks:",
+                "average-rating": "Average Rating:",
+                "rate-site": "Rate Our Website",
+                "rating-submitted": "Thank you for your rating!",
+                "already-rated": "You have already rated this.",
+                "vote": "VOTE"
             },
             ru: {
                 title: "JML Студия",
@@ -659,17 +847,22 @@
                 "play-now": "Играть сейчас",
                 updates: "Обновления сайта",
                 "updates-text": "Следите за последними улучшениями нашего сайта.",
-                "update-1": "<strong>30 мая 2025:</strong> Крупный редизайн <em>(Версия 3.0)</em> - Введён новый дизайн с красной темой, улучшенные CRT-эффекты и обновлённая структура таймлайна.",
-                "update-2": "<strong>15 мая 2025:</strong> Обновление аналитики <em>(Версия 2.1)</em> - Добавлена аналитика в реальном времени с отслеживанием длительности сессий и кликов.",
-                "update-3": "<strong>20 апреля 2025:</strong> Оптимизация для мобильных устройств <em>(Версия 2.0)</em> - Улучшен адаптивный дизайн для лучшего мобильного опыта.",
-                "update-4": "<strong>10 апреля 2025:</strong> Визуальное обновление <em>(Версия 1.1)</em> - Обновлены шрифты и добавлены изображения для игровых карточек.",
-                "update-5": "<strong>25 марта 2025:</strong> Первоначальный запуск <em>(Версия 1.0)</em> - Запущен сайт JML Studio с ретро-эстетикой PSX.",
-                "version-info": "Текущая версия сайта: 3.0 (Выпущена 30 мая 2025)",
+                "update-1": "<strong>1 июня 2025:</strong> Улучшенная система рейтинга <em>(Версия 3.2)</em> - Добавлены красные звёзды, кнопка ГОЛОСОВАТЬ и аналитика для отправки рейтингов.",
+                "update-2": "<strong>1 июня 2025:</strong> Улучшение системы рейтинга <em>(Версия 3.1)</em> - Добавлены обратная связь для пользователей и механика единичной оценки для игр и сайта.",
+                "update-3": "<strong>30 мая 2025:</strong> Крупный редизайн <em>(Версия 3.0)</em> - Введён новый дизайн с красной темой, улучшенные CRT-эффекты и обновлённая структура таймлайна.",
+                "update-4": "<strong>15 мая 2025:</strong> Обновление аналитики <em>(Версия 2.1)</em> - Добавлена аналитика в реальном времени с отслеживанием длительности сессий и кликов.",
+                "update-5": "<strong>20 апреля 2025:</strong> Оптимизация для мобильных устройств <em>(Версия 2.0)</em> - Улучшен адаптивный дизайн для лучшего мобильного опыта.",
+                "version-info": "Текущая версия сайта: 3.2 (Выпущена 1 июня 2025)",
                 "footer-copyright": "© 2025 JML Студия. Все права защищены.",
                 "page-views": "Просмотры страницы:",
                 "unique-visitors": "Уникальные посетители:",
                 "avg-session": "Средняя сессия:",
-                "total-clicks": "Всего кликов:"
+                "total-clicks": "Всего кликов:",
+                "average-rating": "Средний рейтинг:",
+                "rate-site": "Оцените наш сайт",
+                "rating-submitted": "Спасибо за вашу оценку!",
+                "already-rated": "Вы уже оценили это.",
+                "vote": "ГОЛОСОВАТЬ"
             }
         };
 
@@ -680,30 +873,31 @@
                 return v.toString(16);
             }),
             init: () => {
-                // Initialize analytics data
                 let analyticsData = JSON.parse(localStorage.getItem('analyticsData')) || {
                     pageViews: 0,
                     uniqueVisitors: new Set(),
                     sessions: [],
                     clicks: 0
                 };
+                if (!(analyticsData.uniqueVisitors instanceof Set)) {
+                    analyticsData.uniqueVisitors = new Set(analyticsData.uniqueVisitors);
+                }
 
                 const visitorId = localStorage.getItem('visitorId') || Analytics.generateUUID();
                 localStorage.setItem('visitorId', visitorId);
                 const sessionStart = Date.now();
 
-                // Increment page views
                 analyticsData.pageViews += 1;
-
-                // Add unique visitor
                 analyticsData.uniqueVisitors.add(visitorId);
 
-                // Track clicks
                 let clickCount = analyticsData.clicks;
                 document.addEventListener('click', () => {
                     clickCount++;
                     analyticsData.clicks = clickCount;
-                    localStorage.setItem('analyticsData', JSON.stringify(analyticsData));
+                    localStorage.setItem('analyticsData', JSON.stringify({
+                        ...analyticsData,
+                        uniqueVisitors: [...analyticsData.uniqueVisitors]
+                    }));
                     document.getElementById('total-clicks').textContent = clickCount;
                     Analytics.sendEvent('click', {
                         visitorId,
@@ -712,11 +906,13 @@
                     });
                 });
 
-                // Track session duration on unload
                 window.addEventListener('beforeunload', () => {
                     const sessionDuration = (Date.now() - sessionStart) / 1000;
                     analyticsData.sessions.push(sessionDuration);
-                    localStorage.setItem('analyticsData', JSON.stringify(analyticsData));
+                    localStorage.setItem('analyticsData', JSON.stringify({
+                        ...analyticsData,
+                        uniqueVisitors: [...analyticsData.uniqueVisitors]
+                    }));
                     Analytics.sendEvent('session_end', {
                         visitorId,
                         duration: sessionDuration,
@@ -724,7 +920,6 @@
                     });
                 });
 
-                // Update analytics display
                 const avgSession = analyticsData.sessions.length > 0 
                     ? analyticsData.sessions.reduce((a, b) => a + b, 0) / analyticsData.sessions.length
                     : 0;
@@ -733,7 +928,6 @@
                 document.getElementById('avg-session').textContent = `${Math.round(avgSession)}s`;
                 document.getElementById('total-clicks').textContent = clickCount;
 
-                // Log page view
                 Analytics.sendEvent('page_view', {
                     visitorId,
                     page: window.location.pathname,
@@ -741,10 +935,129 @@
                 });
             },
             sendEvent: (eventType, data) => {
-                // Simulate sending event to a backend by storing in localStorage
                 let events = JSON.parse(localStorage.getItem('analyticsEvents')) || [];
                 events.push({ eventType, data, timestamp: new Date().toISOString() });
                 localStorage.setItem('analyticsEvents', JSON.stringify(events));
+            }
+        };
+
+        // Rating system
+        const Rating = {
+            init: () => {
+                let ratingsData = JSON.parse(localStorage.getItem('ratingsData')) || {
+                    'burger-shop': [],
+                    'trailer-park': [],
+                    'site': []
+                };
+                let userRatings = JSON.parse(localStorage.getItem('userRatings')) || {};
+
+                const updateRatingDisplay = (gameId, elementId) => {
+                    const ratings = ratingsData[gameId] || [];
+                    const average = ratings.length > 0 
+                        ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1)
+                        : 0;
+                    const voteCount = ratings.length;
+                    const element = document.getElementById(elementId);
+                    if (element) {
+                        element.textContent = average;
+                        element.parentElement.textContent = 
+                            translations[currentLang]['average-rating'] + ` ${average} (${voteCount} ${currentLang === 'en' ? 'votes' : 'голосов'})`;
+                    }
+                };
+
+                const showFeedback = (feedbackId, messageKey) => {
+                    const feedbackElement = document.getElementById(feedbackId);
+                    if (feedbackElement) {
+                        feedbackElement.textContent = translations[currentLang][messageKey];
+                        feedbackElement.classList.add('show');
+                        setTimeout(() => {
+                            feedbackElement.classList.remove('show');
+                        }, 3000);
+                    }
+                };
+
+                document.querySelectorAll('.rating-container').forEach(container => {
+                    const gameId = container.getAttribute('data-game');
+                    const isSitePrompt = gameId === 'site-prompt';
+                    const effectiveGameId = isSitePrompt ? 'site' : gameId;
+                    const visitorId = localStorage.getItem('visitorId');
+                    const hasRated = userRatings[visitorId]?.[effectiveGameId];
+                    const feedbackId = isSitePrompt ? 'site-prompt-feedback' : `${effectiveGameId}-feedback`;
+                    const voteButtonId = isSitePrompt ? 'site-prompt-vote' : `${effectiveGameId}-vote`;
+                    let selectedRating = null;
+
+                    if (hasRated) {
+                        const userRating = userRatings[visitorId][effectiveGameId];
+                        container.querySelectorAll('.star').forEach(s => {
+                            s.classList.toggle('filled', parseInt(s.getAttribute('data-value')) <= userRating);
+                            s.style.cursor = '';
+                        });
+                        const voteButton = document.getElementById(voteButtonId);
+                        if (voteButton) voteButton.disabled = true;
+                    }
+
+                    container.querySelectorAll('.star').forEach(star => {
+                        star.addEventListener('click', () => {
+                            if (hasRated) {
+                                showFeedback(feedbackId, 'already-rated');
+                                return;
+                            }
+                            selectedRating = parseInt(star.getAttribute('data-value'));
+                            container.querySelectorAll('.star').forEach(s => {
+                                s.classList.toggle('filled', parseInt(s.getAttribute('data-value')) <= selectedRating);
+                            });
+                            const voteButton = document.getElementById(voteButtonId);
+                            if (voteButton) voteButton.disabled = false;
+                        });
+                    });
+
+                    const voteButton = document.getElementById(voteButtonId);
+                    if (voteButton) {
+                        voteButton.addEventListener('click', () => {
+                            if (hasRated) {
+                                showFeedback(feedbackId, 'already-rated');
+                                return;
+                            }
+                            if (!selectedRating) {
+                                showFeedback(feedbackId, 'rating-submitted'); // Misuse for "select a rating"
+                                return;
+                            }
+                            ratingsData[effectiveGameId].push(selectedRating);
+                            if (!userRatings[visitorId]) userRatings[visitorId] = {};
+                            userRatings[visitorId][effectiveGameId] = selectedRating;
+                            localStorage.setItem('ratingsData', JSON.stringify(ratingsData));
+                            localStorage.setItem('userRatings', JSON.stringify(userRatings));
+                            updateRatingDisplay(effectiveGameId, isSitePrompt ? 'site-prompt-rating' : `${effectiveGameId}-rating`);
+                            updateRatingDisplay('site', 'site-rating');
+                            Analytics.sendEvent('rating_submission', {
+                                visitorId,
+                                game: effectiveGameId,
+                                rating: selectedRating,
+                                timestamp: new Date().toISOString()
+                            });
+                            container.querySelectorAll('.star').forEach(s => {
+                                s.style.cursor = '';
+                            });
+                            voteButton.disabled = true;
+                            showFeedback(feedbackId, 'rating-submitted');
+                            if (isSitePrompt) {
+                                document.getElementById('site-rating-prompt').style.display = 'none';
+                            }
+                        });
+                    }
+
+                    updateRatingDisplay(effectiveGameId, isSitePrompt ? 'site-prompt-rating' : `${effectiveGameId}-rating`);
+                });
+
+                // Show site rating prompt when scrolled to bottom
+                let hasRatedSite = userRatings[localStorage.getItem('visitorId')]?.site;
+                if (!hasRatedSite) {
+                    window.addEventListener('scroll', () => {
+                        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+                            document.getElementById('site-rating-prompt').style.display = 'block';
+                        }
+                    });
+                }
             }
         };
 
@@ -768,7 +1081,11 @@
                 const key = element.getAttribute('data-i18n');
                 element.innerHTML = translations[currentLang][key] || element.innerHTML;
             });
+            document.querySelectorAll('.vote-button').forEach(button => {
+                button.textContent = translations[currentLang]['vote'];
+            });
             document.documentElement.lang = currentLang;
+            Rating.init(); // Re-initialize ratings to update translated text
             trackEvent('settings', `language_${currentLang}`);
         }
 
@@ -783,7 +1100,7 @@
 
         // Sound toggle
         let soundEnabled = localStorage.getItem('sound') !== 'off';
-        const crtSound = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=');
+        const crtSound = new Audio('data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==');
         crtSound.loop = true;
         function toggleSound() {
             soundEnabled = !soundEnabled;
@@ -796,11 +1113,9 @@
         // Initialize on load
         window.onload = () => {
             Analytics.init();
-            // Initialize language
+            Rating.init();
             if (currentLang !== 'en') toggleLanguage();
-            // Initialize theme
             if (localStorage.getItem('theme') === 'light') toggleTheme();
-            // Initialize sound
             if (!soundEnabled) {
                 document.getElementById('sound-toggle').textContent = 'Sound: Off';
             } else {
