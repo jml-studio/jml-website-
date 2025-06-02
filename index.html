@@ -19,6 +19,9 @@
             --static-glow: rgba(200, 16, 16, 0.5);
             --red-pulse: rgba(200, 16, 16, 0.2);
             --transition: all 0.3s ease;
+            --light-bg: #f0f0f0;
+            --light-text: #1a1a1a;
+            --light-shadow: rgba(0, 0, 0, 0.3);
         }
 
         body {
@@ -29,6 +32,12 @@
             image-rendering: pixelated;
             overflow-x: hidden;
             position: relative;
+            scroll-behavior: smooth;
+        }
+
+        body.light-mode {
+            background: linear-gradient(180deg, var(--light-bg), #d0d0d0);
+            color: var(--light-text);
         }
 
         .crt-vignette {
@@ -80,6 +89,14 @@
             z-index: 3;
         }
 
+        body.light-mode header,
+        body.light-mode main,
+        body.light-mode footer {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--light-text);
+            box-shadow: 0 0 25px var(--light-shadow);
+        }
+
         .logo {
             display: block;
             margin: 0 auto;
@@ -103,6 +120,11 @@
             margin-bottom: 25px;
         }
 
+        body.light-mode h1 {
+            color: var(--light-text);
+            text-shadow: 0 0 12px var(--light-shadow);
+        }
+
         h2 {
             font-family: 'Press Start 2P', monospace;
             font-size: 2.8em;
@@ -113,11 +135,21 @@
             margin-bottom: 30px;
         }
 
+        body.light-mode h2 {
+            color: var(--light-text);
+            text-shadow: 0 0 10px var(--light-shadow);
+        }
+
         p {
             font-size: 1.5em;
             line-height: 2;
             color: var(--ghost-white);
             text-shadow: 0 0 4px var(--static-glow);
+        }
+
+        body.light-mode p {
+            color: var(--light-text);
+            text-shadow: none;
         }
 
         .link-button, .play-button {
@@ -140,12 +172,27 @@
             overflow: hidden;
         }
 
+        body.light-mode .link-button,
+        body.light-mode .play-button {
+            border: 4px solid var(--light-text);
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--light-text);
+            box-shadow: 0 0 15px var(--light-shadow);
+        }
+
         .link-button:hover, .play-button:hover {
             background: var(--blood-red);
             color: var(--midnight-black);
             box-shadow: 0 0 30px var(--blood-red);
             transform: translateY(-4px) scale(1.08);
             animation: glitchHover 0.5s ease;
+        }
+
+        body.light-mode .link-button:hover,
+        body.light-mode .play-button:hover {
+            background: var(--light-text);
+            color: var(--light-bg);
+            box-shadow: 0 0 30px var(--light-shadow);
         }
 
         .game-grid {
@@ -167,10 +214,21 @@
             overflow: hidden;
         }
 
+        body.light-mode .game-card {
+            border: 4px solid var(--light-text);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 20px var(--light-shadow);
+        }
+
         .game-card:hover {
             transform: translateY(-10px) scale(1.03);
             box-shadow: 0 0 40px var(--blood-red);
             background: rgba(25, 25, 25, 0.95);
+        }
+
+        body.light-mode .game-card:hover {
+            box-shadow: 0 0 40px var(--light-shadow);
+            background: rgba(240, 240, 240, 0.95);
         }
 
         .game-image {
@@ -183,8 +241,16 @@
             transition: var(--transition);
         }
 
+        body.light-mode .game-image {
+            filter: drop-shadow(0 0 10px var(--light-shadow));
+        }
+
         .game-image:hover {
             filter: drop-shadow(0 0 20px var(--blood-red)) brightness(1.15);
+        }
+
+        body.light-mode .game-image:hover {
+            filter: drop-shadow(0 0 20px var(--light-shadow)) brightness(1.15);
         }
 
         .game-title {
@@ -196,11 +262,20 @@
             margin-bottom: 20px;
         }
 
+        body.light-mode .game-title {
+            color: var(--light-text);
+            text-shadow: 0 0 8px var(--light-shadow);
+        }
+
         .game-description {
             color: var(--ghost-white);
             margin: 25px 0;
             font-size: 1.4em;
             line-height: 1.8;
+        }
+
+        body.light-mode .game-description {
+            color: var(--light-text);
         }
 
         nav {
@@ -214,6 +289,12 @@
             box-shadow: 0 0 20px var(--static-glow);
         }
 
+        body.light-mode nav {
+            background: rgba(255, 255, 255, 0.98);
+            border-bottom: 4px solid var(--light-text);
+            box-shadow: 0 0 20px var(--light-shadow);
+        }
+
         nav a {
             margin: 0 35px;
             font-family: 'Press Start 2P', monospace;
@@ -225,12 +306,23 @@
             text-shadow: 0 0 5px var(--static-glow);
         }
 
+        body.light-mode nav a {
+            color: var(--light-text);
+            text-shadow: 0 0 5px var(--light-shadow);
+        }
+
         nav a:hover {
             color: var(--midnight-black);
             background: var(--blood-red);
             padding: 10px 20px;
             border-radius: 10px;
             box-shadow: 0 0 15px var(--blood-red);
+        }
+
+        body.light-mode nav a:hover {
+            color: var(--light-bg);
+            background: var(--light-text);
+            box-shadow: 0 0 15px var(--light-shadow);
         }
 
         .updates-list {
@@ -247,6 +339,11 @@
             text-shadow: 0 0 4px var(--static-glow);
         }
 
+        body.light-mode .updates-list li {
+            color: var(--light-text);
+            text-shadow: none;
+        }
+
         .updates-list li:before {
             content: '';
             position: absolute;
@@ -259,6 +356,11 @@
             box-shadow: 0 0 10px var(--static-glow);
         }
 
+        body.light-mode .updates-list li:before {
+            background: var(--light-text);
+            box-shadow: 0 0 10px var(--light-shadow);
+        }
+
         .updates-list:after {
             content: '';
             position: absolute;
@@ -268,6 +370,10 @@
             width: 4px;
             background: var(--deep-red);
             opacity: 0.5;
+        }
+
+        body.light-mode .updates-list:after {
+            background: var(--light-text);
         }
 
         .analytics-hud {
@@ -284,9 +390,61 @@
             box-shadow: 0 0 20px var(--static-glow);
         }
 
+        body.light-mode .analytics-hud {
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid var(--light-text);
+            color: var(--light-text);
+            text-shadow: none;
+            box-shadow: 0 0 20px var(--light-shadow);
+        }
+
         .analytics-hud span {
             color: var(--blood-red);
             animation: counterGlow 1.5s ease-in-out infinite;
+        }
+
+        body.light-mode .analytics-hud span {
+            color: var(--light-text);
+        }
+
+        .settings-bar {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 5;
+            display: flex;
+            gap: 10px;
+        }
+
+        .settings-button {
+            padding: 10px 20px;
+            border: 2px solid var(--deep-red);
+            background: rgba(10, 10, 10, 0.95);
+            color: var(--blood-red);
+            font-family: 'VT323', monospace;
+            font-size: 1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        body.light-mode .settings-button {
+            border: 2px solid var(--light-text);
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--light-text);
+        }
+
+        .settings-button:hover {
+            background: var(--blood-red);
+            color: var(--midnight-black);
+            box-shadow: 0 0 15px var(--blood-red);
+        }
+
+        body.light-mode .settings-button:hover {
+            background: var(--light-text);
+            color: var(--light-bg);
+            box-shadow: 0 0 15px var(--light-shadow);
         }
 
         @keyframes crtFlicker {
@@ -359,6 +517,8 @@
             .analytics-hud { font-size: 1.1em; }
             .link-button, .play-button { padding: 14px 30px; font-size: 1.2em; }
             .updates-list li { font-size: 1.2em; }
+            .settings-bar { flex-direction: column; top: 5px; right: 5px; }
+            .settings-button { font-size: 0.9em; padding: 8px 15px; }
         }
 
         @media (max-width: 480px) {
@@ -373,6 +533,7 @@
             .analytics-hud { font-size: 1em; }
             .link-button, .play-button { padding: 12px 25px; font-size: 1.1em; }
             .updates-list li { font-size: 1.1em; }
+            .settings-button { font-size: 0.8em; padding: 6px 12px; }
         }
     </style>
 </head>
@@ -380,111 +541,182 @@
     <div class="crt-vignette"></div>
     <div class="static-overlay"></div>
     <div class="red-pulse"></div>
+    <div class="settings-bar">
+        <button id="lang-toggle" class="settings-button" onclick="toggleLanguage()">RU</button>
+        <button id="theme-toggle" class="settings-button" onclick="toggleTheme()">Light Mode</button>
+        <button id="sound-toggle" class="settings-button" onclick="toggleSound()">Sound: On</button>
+    </div>
     <nav>
         <a href="#mission" onclick="trackEvent('nav_click', 'About Us')">About Us</a>
         <a href="#games" onclick="trackEvent('nav_click', 'Our Games')">Our Games</a>
-        <a href="#updates" onclick="trackEvent('nav_click', 'Updates')">Updates</a>
+        <a href "#updates" onclick="trackEvent('nav_click', 'Updates')">Updates</a>
     </nav>
     <header role="banner">
         <img src="https://i.postimg.cc/0b6ppScJ/JML-Logo-01.png" alt="JML Studio Logo" class="logo" loading="lazy">
-        <h1>JML Studio</h1>
-        <p class="text-center text-2xl mt-6 font-bold">Retro Horror Games with Pixel Art</p>
+        <h1 data-i18n="title">JML Studio</h1>
+        <p class="text-center text-2xl mt-6 font-bold" data-i18n="subtitle">Retro Horror Games with Pixel Art</p>
     </header>
     <main role="main">
         <section class="mb-24" id="mission" aria-labelledby="mission">
-            <h2>About Us</h2>
-            <p>
+            <h2 data-i18n="about-us">About Us</h2>
+            <p data-i18n="about-us-text">
                 JML Studio creates retro-inspired PSX horror games with immersive pixel art and eerie atmospheres. Drawing from '90s survival horror classics, our games blend low-poly visuals with gripping narratives to deliver unforgettable experiences. Explore our worlds and face the unknown.
             </p>
         </section>
         <section class="mb-24" id="games" aria-labelledby="games">
-            <h2>Our Games</h2>
-            <p>
+            <h2 data-i18n="our-games">Our Games</h2>
+            <p data-i18n="our-games-text">
                 Discover our horror games on <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="link-button" onclick="trackEvent('external_link', 'Itch.io community')">Itch.io</a>. 
                 Each title offers unique settings and chilling gameplay inspired by retro aesthetics.
             </p>
             <div class="game-grid">
                 <div class="game-card">
-                    <img src="https://iimg.su/i/IukzHi" class="game-image" loading="lazy">
-                    <h3 class="game-title">Burger Shop</h3>
-                    <p class="game-description">
+                    <img src="https://i.postimg.cc/Qt7gHCyJ/BS1.png" class="game-image" loading="lazy" alt="Burger Shop Logo">
+                    <h3 class="game-title" data-i18n="burger-shop-title">Burger Shop</h3>
+                    <p class="game-description" data-i18n="burger-shop-desc">
                         Explore a haunted burger shop where eerie lights and shadowy corners hide unsettling secrets. Survive a night of pixelated horror in this retro-style adventure.
                     </p>
-                    <a href="https:https://jmlgamestudio.itch.io/whispers-in-the-dark-burger-shop" target="_blank" rel="noopener noreferrer" class="play-button" onclick="trackEvent('game_play', 'Burger Shop')">Play Now</a>
+                    <a href="https://jmlgamestudio.itch.io/whispers-in-the-dark-burger-shop" target="_blank" rel="noopener noreferrer" class="play-button" data-i18n="play-now">Play Now</a>
                 </div>
                 <div class="game-card">
-                    <img src="https://iimg.su/i/hYjSAV" alt="Trailer Park Logo" class="game-image" loading="lazy">
-                    <h3 class="game-title">Trailer Park</h3>
-                    <p class="game-description">
+                    <img src="https://i.postimg.cc/15rHGg5W/LOGO1.png" alt="Trailer Park Logo" class="game-image" loading="lazy">
+                    <h3 class="game-title" data-i18n="trailer-park-title">Trailer Park</h3>
+                    <p class="game-description" data-i18n="trailer-park-desc">
                         Navigate a desolate trailer park shrouded in mystery, where silence conceals terrifying threats. Can you uncover its dark secrets and escape?
                     </p>
-                    <a href="https:https://jmlgamestudio.itch.io/trailer-park" target="_blank" rel="noopener noreferrer" class="play-button" onclick="trackEvent('game_play', 'Trailer Park')">Play Now</a>
+                    <a href="https://jmlgamestudio.itch.io/trailer-park" target="_blank" rel="noopener noreferrer" class="play-button" data-i18n="play-now">Play Now</a>
                 </div>
             </div>
         </section>
         <section class="mb-24" id="updates" aria-labelledby="updates">
-            <h2>Website Updates</h2>
-            <p>Stay updated on the latest improvements to our website.</p>
+            <h2 data-i18n="updates">Website Updates</h2>
+            <p data-i18n="updates-text">Stay updated on the latest improvements to our website.</p>
             <ul class="updates-list">
-                <li><strong>May 30, 2025:</strong> Major redesign <em>(Version 3.0)</em> - Introduced new red-themed design, enhanced CRT effects, and timeline update layout.</li>
-                <li><strong>May 15, 2025:</strong> Analytics upgrade <em>(Version 2.1)</em> - Added real-time analytics with session duration and click tracking.</li>
-                <li><strong>April 20, 2025:</strong> Mobile optimization <em>(Version 2.0)</em> - Improved responsive design for better mobile experience.</li>
-                <li><strong>April 10, 2025:</strong> Visual refresh <em>(Version 1.1)</em> - Updated fonts and added game card images.</li>
-                <li><strong>March 25, 2025:</strong> Initial launch <em>(Version 1.0)</em> - Launched JML Studio website with retro PSX aesthetic.</li>
+                <li data-i18n="update-1"><strong>May 30, 2025:</strong> Major redesign <em>(Version 3.0)</em> - Introduced new red-themed design, enhanced CRT effects, and timeline update layout.</li>
+                <li data-i18n="update-2"><strong>May 15, 2025:</strong> Analytics upgrade <em>(Version 2.1)</em> - Added real-time analytics with session duration and click tracking.</li>
+                <li data-i18n="update-3"><strong>April 20, 2025:</strong> Mobile optimization <em>(Version 2.0)</em> - Improved responsive design for better mobile experience.</li>
+                <li data-i18n="update-4"><strong>April 10, 2025:</strong> Visual refresh <em>(Version 1.1)</em> - Updated fonts and added game card images.</li>
+                <li data-i18n="update-5"><strong>March 25, 2025:</strong> Initial launch <em>(Version 1.0)</em> - Launched JML Studio website with retro PSX aesthetic.</li>
             </ul>
-            <p class="version-info mt-6">Current Website Version: 3.0 (Released May 30, 2025)</p>
+            <p class="version-info mt-6" data-i18n="version-info">Current Website Version: 3.0 (Released May 30, 2025)</p>
         </section>
     </main>
     <footer role="contentinfo">
-        <p>© 2025 JML Studio. All rights reserved.</p>
+        <p data-i18n="footer-copyright">© 2025 JML Studio. All rights reserved.</p>
         <p class="mt-8">
             <a href="https://agamedeveloperstudio.itch.io/" target="_blank" rel="noopener noreferrer" class="link-button" onclick="trackEvent('footer_link', 'Itch.io')">Itch.io</a>
             <a href="https://discord.gg/quQzQAa2nP" target="_blank" rel="noopener noreferrer" class="link-button" onclick="trackEvent('footer_link', 'Discord')">Discord</a>
         </p>
         <div class="analytics-hud">
             <p>
-                Page Views: <span id="page-views">0</span> | 
-                Unique Visitors: <span id="unique-visitors">0</span> | 
-                Avg. Session: <span id="avg-session">0s</span> | 
-                Total Clicks: <span id="total-clicks">0</span>
+                <span data-i18n="page-views">Page Views:</span> <span id="page-views">0</span> | 
+                <span data-i18n="unique-visitors">Unique Visitors:</span> <span id="unique-visitors">0</span> | 
+                <span data-i18n="avg-session">Avg. Session:</span> <span id="avg-session">0s</span> | 
+                <span data-i18n="total-clicks">Total Clicks:</span> <span id="total-clicks">0</span>
             </p>
         </div>
     </footer>
     <script>
-        // Analytics tracking
+        // Language translations
+        const translations = {
+            en: {
+                title: "JML Studio",
+                subtitle: "Retro Horror Games with Pixel Art",
+                "about-us": "About Us",
+                "about-us-text": "JML Studio creates retro-inspired PSX horror games with immersive pixel art and eerie atmospheres. Drawing from '90s survival horror classics, our games blend low-poly visuals with gripping narratives to deliver unforgettable experiences. Explore our worlds and face the unknown.",
+                "our-games": "Our Games",
+                "our-games-text": "Discover our horror games on <a href='https://agamedeveloperstudio.itch.io/' target='_blank' rel='noopener noreferrer' class='link-button' onclick=\"trackEvent('external_link', 'Itch.io community')\">Itch.io</a>. Each title offers unique settings and chilling gameplay inspired by retro aesthetics.",
+                "burger-shop-title": "Burger Shop",
+                "burger-shop-desc": "Explore a haunted burger shop where eerie lights and shadowy corners hide unsettling secrets. Survive a night of pixelated horror in this retro-style adventure.",
+                "trailer-park-title": "Trailer Park",
+                "trailer-park-desc": "Navigate a desolate trailer park shrouded in mystery, where silence conceals terrifying threats. Can you uncover its dark secrets and escape?",
+                "play-now": "Play Now",
+                updates: "Website Updates",
+                "updates-text": "Stay updated on the latest improvements to our website.",
+                "update-1": "<strong>May 30, 2025:</strong> Major redesign <em>(Version 3.0)</em> - Introduced new red-themed design, enhanced CRT effects, and timeline update layout.",
+                "update-2": "<strong>May 15, 2025:</strong> Analytics upgrade <em>(Version 2.1)</em> - Added real-time analytics with session duration and click tracking.",
+                "update-3": "<strong>April 20, 2025:</strong> Mobile optimization <em>(Version 2.0)</em> - Improved responsive design for better mobile experience.",
+                "update-4": "<strong>April 10, 2025:</strong> Visual refresh <em>(Version 1.1)</em> - Updated fonts and added game card images.",
+                "update-5": "<strong>March 25, 2025:</strong> Initial launch <em>(Version 1.0)</em> - Launched JML Studio website with retro PSX aesthetic.",
+                "version-info": "Current Website Version: 3.0 (Released May 30, 2025)",
+                "footer-copyright": "© 2025 JML Studio. All rights reserved.",
+                "page-views": "Page Views:",
+                "unique-visitors": "Unique Visitors:",
+                "avg-session": "Avg. Session:",
+                "total-clicks": "Total Clicks:"
+            },
+            ru: {
+                title: "JML Студия",
+                subtitle: "Ретро-хоррор игры с пиксельной графикой",
+                "about-us": "О нас",
+                "about-us-text": "JML Студия создаёт ретро-хоррор игры в стиле PSX с захватывающей пиксельной графикой и жуткой атмосферой. Вдохновлённые классическими играми ужасов 90-х, наши игры сочетают низкополигональную графику с увлекательными сюжетами, чтобы подарить незабываемые впечатления. Исследуйте наши миры и столкнитесь с неизвестностью.",
+                "our-games": "Наши игры",
+                "our-games-text": "Откройте для себя наши хоррор-игры на <a href='https://agamedeveloperstudio.itch.io/' target='_blank' rel='noopener noreferrer' class='link-button' onclick=\"trackEvent('external_link', 'Itch.io community')\">Itch.io</a>. Каждая игра предлагает уникальные локации и пугающий игровой процесс в ретро-стиле.",
+                "burger-shop-title": "Бургерная",
+                "burger-shop-desc": "Исследуйте заброшенную бургерную, где жуткие огни и тёмные углы скрывают тревожные тайны. Переживите ночь пиксельного ужаса в этом приключении в ретро-стиле.",
+                "trailer-park-title": "Трейлерный парк",
+                "trailer-park-desc": "Путешествуйте по заброшенному трейлерному парку, окутанному тайной, где тишина скрывает ужасающие угрозы. Сможете ли вы раскрыть его тёмные секреты и сбежать?",
+                "play-now": "Играть сейчас",
+                updates: "Обновления сайта",
+                "updates-text": "Следите за последними улучшениями нашего сайта.",
+                "update-1": "<strong>30 мая 2025:</strong> Крупный редизайн <em>(Версия 3.0)</em> - Введён новый дизайн с красной темой, улучшенные CRT-эффекты и обновлённая структура таймлайна.",
+                "update-2": "<strong>15 мая 2025:</strong> Обновление аналитики <em>(Версия 2.1)</em> - Добавлена аналитика в реальном времени с отслеживанием длительности сессий и кликов.",
+                "update-3": "<strong>20 апреля 2025:</strong> Оптимизация для мобильных устройств <em>(Версия 2.0)</em> - Улучшен адаптивный дизайн для лучшего мобильного опыта.",
+                "update-4": "<strong>10 апреля 2025:</strong> Визуальное обновление <em>(Версия 1.1)</em> - Обновлены шрифты и добавлены изображения для игровых карточек.",
+                "update-5": "<strong>25 марта 2025:</strong> Первоначальный запуск <em>(Версия 1.0)</em> - Запущен сайт JML Studio с ретро-эстетикой PSX.",
+                "version-info": "Текущая версия сайта: 3.0 (Выпущена 30 мая 2025)",
+                "footer-copyright": "© 2025 JML Студия. Все права защищены.",
+                "page-views": "Просмотры страницы:",
+                "unique-visitors": "Уникальные посетители:",
+                "avg-session": "Средняя сессия:",
+                "total-clicks": "Всего кликов:"
+            }
+        };
+
+        // Analytics system
         const Analytics = {
             generateUUID: () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
                 const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
             }),
-            init: async () => {
+            init: () => {
+                // Initialize analytics data
+                let analyticsData = JSON.parse(localStorage.getItem('analyticsData')) || {
+                    pageViews: 0,
+                    uniqueVisitors: new Set(),
+                    sessions: [],
+                    clicks: 0
+                };
+
                 const visitorId = localStorage.getItem('visitorId') || Analytics.generateUUID();
                 localStorage.setItem('visitorId', visitorId);
-                
                 const sessionStart = Date.now();
-                let clickCount = 0;
 
-                // Track page view
-                Analytics.sendEvent('page_view', {
-                    visitorId,
-                    page: window.location.pathname,
-                    timestamp: new Date().toISOString()
-                });
+                // Increment page views
+                analyticsData.pageViews += 1;
 
-                // Update click count on any click
+                // Add unique visitor
+                analyticsData.uniqueVisitors.add(visitorId);
+
+                // Track clicks
+                let clickCount = analyticsData.clicks;
                 document.addEventListener('click', () => {
                     clickCount++;
+                    analyticsData.clicks = clickCount;
+                    localStorage.setItem('analyticsData', JSON.stringify(analyticsData));
+                    document.getElementById('total-clicks').textContent = clickCount;
                     Analytics.sendEvent('click', {
                         visitorId,
                         element: event.target.tagName,
                         timestamp: new Date().toISOString()
                     });
-                    document.getElementById('total-clicks').textContent = clickCount;
                 });
 
                 // Track session duration on unload
                 window.addEventListener('beforeunload', () => {
                     const sessionDuration = (Date.now() - sessionStart) / 1000;
+                    analyticsData.sessions.push(sessionDuration);
+                    localStorage.setItem('analyticsData', JSON.stringify(analyticsData));
                     Analytics.sendEvent('session_end', {
                         visitorId,
                         duration: sessionDuration,
@@ -492,31 +724,27 @@
                     });
                 });
 
-                // Fetch and display analytics
-                try {
-                    const response = await fetch('/api/analytics', {
-                        method: 'GET',
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-                    const data = await response.json();
-                    document.getElementById('page-views').textContent = data.pageViews || 0;
-                    document.getElementById('unique-visitors').textContent = data.uniqueVisitors || 0;
-                    document.getElementById('avg-session').textContent = data.avgSession ? `${Math.round(data.avgSession)}s` : '0s';
-                    document.getElementById('total-clicks').textContent = clickCount;
-                } catch (error) {
-                    console.error('Analytics fetch error:', error);
-                }
+                // Update analytics display
+                const avgSession = analyticsData.sessions.length > 0 
+                    ? analyticsData.sessions.reduce((a, b) => a + b, 0) / analyticsData.sessions.length
+                    : 0;
+                document.getElementById('page-views').textContent = analyticsData.pageViews;
+                document.getElementById('unique-visitors').textContent = analyticsData.uniqueVisitors.size;
+                document.getElementById('avg-session').textContent = `${Math.round(avgSession)}s`;
+                document.getElementById('total-clicks').textContent = clickCount;
+
+                // Log page view
+                Analytics.sendEvent('page_view', {
+                    visitorId,
+                    page: window.location.pathname,
+                    timestamp: new Date().toISOString()
+                });
             },
-            sendEvent: async (eventType, data) => {
-                try {
-                    await fetch('/api/analytics', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ eventType, data })
-                    });
-                } catch (error) {
-                    console.error('Analytics send error:', error);
-                }
+            sendEvent: (eventType, data) => {
+                // Simulate sending event to a backend by storing in localStorage
+                let events = JSON.parse(localStorage.getItem('analyticsEvents')) || [];
+                events.push({ eventType, data, timestamp: new Date().toISOString() });
+                localStorage.setItem('analyticsEvents', JSON.stringify(events));
             }
         };
 
@@ -530,9 +758,54 @@
             });
         }
 
-        // Initialize analytics on load
+        // Language toggle
+        let currentLang = localStorage.getItem('language') || 'en';
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ru' : 'en';
+            localStorage.setItem('language', currentLang);
+            document.getElementById('lang-toggle').textContent = currentLang === 'en' ? 'RU' : 'EN';
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                element.innerHTML = translations[currentLang][key] || element.innerHTML;
+            });
+            document.documentElement.lang = currentLang;
+            trackEvent('settings', `language_${currentLang}`);
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLightMode = document.body.classList.contains('light-mode');
+            document.getElementById('theme-toggle').textContent = isLightMode ? 'Dark Mode' : 'Light Mode';
+            localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+            trackEvent('settings', `theme_${isLightMode ? 'light' : 'dark'}`);
+        }
+
+        // Sound toggle
+        let soundEnabled = localStorage.getItem('sound') !== 'off';
+        const crtSound = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=');
+        crtSound.loop = true;
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('sound-toggle').textContent = `Sound: ${soundEnabled ? 'On' : 'Off'}`;
+            localStorage.setItem('sound', soundEnabled ? 'on' : 'off');
+            soundEnabled ? crtSound.play() : crtSound.pause();
+            trackEvent('settings', `sound_${soundEnabled ? 'on' : 'off'}`);
+        }
+
+        // Initialize on load
         window.onload = () => {
             Analytics.init();
+            // Initialize language
+            if (currentLang !== 'en') toggleLanguage();
+            // Initialize theme
+            if (localStorage.getItem('theme') === 'light') toggleTheme();
+            // Initialize sound
+            if (!soundEnabled) {
+                document.getElementById('sound-toggle').textContent = 'Sound: Off';
+            } else {
+                crtSound.play();
+            }
         };
     </script>
 </body>
